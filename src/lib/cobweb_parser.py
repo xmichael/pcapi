@@ -13,7 +13,7 @@ class COBWEBFormParser:
         if self.content:
             soup = BeautifulSoup(self.content, "html5lib")
             finds = soup.find_all('div', attrs={'class': 'fieldcontain'})
-            return self._get_elements(finds)
+            return {"type": "auth", "graph": self._get_elements(finds)}
         else:
             return None
 
@@ -77,6 +77,6 @@ class COBWEBFormParser:
 
 if __name__ == "__main__":
     f = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'test', 'resources', 'sample.html')
-    with open(self.file, 'rb') as f:
+    with open(f, 'rb') as f:
         parser = COBWEBFormParser(f)
         print parser.extract()
