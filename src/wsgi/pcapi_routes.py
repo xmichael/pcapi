@@ -55,7 +55,8 @@ def records(provider, userid, path="/"):
 @route('/editors/<provider>/<userid>/',method=["GET","POST","PUT","DELETE"] )
 @route('/editors/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE"] )
 def editors(provider, userid, path="/"):
-    return PCAPIRest(request,response).editors(provider, userid, path)
+    flt = request.GET.get("format")
+    return PCAPIRest(request,response).editors(provider, userid, path, flt)
 
 ###  /tiles/... API ###
 

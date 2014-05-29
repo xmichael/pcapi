@@ -1,5 +1,6 @@
 import re, json, time, simplekml, sys, csv, tempfile, os, copy, zipfile, uuid
 from form_validator import FormValidator, Editor
+from cobweb_parser import COBWEBFormParser
 from bottle import Response
 from StringIO import StringIO
 from operator import itemgetter
@@ -282,7 +283,7 @@ class PCAPIRest(object):
                 log.exception("Exception: " + str(e))
                 return {"error":1 , "msg": str(e)}
         
-    def editors(self, provider, userid, path):
+    def editors(self, provider, userid, path, flt):
         error = self.auth(provider,userid)
         if (error):
             return error
@@ -293,7 +294,7 @@ class PCAPIRest(object):
             self.provider.mkdir("/editors")
         # No subdirectories are allowed when accessing editors
         if re.findall("/editors//?[^/]*$",path):
-            return self.fs(provider,userid,path)
+            return self.fs(provider,userid,path,frmt=flt)
         return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
     
     def tiles(self, provider, userid, path):
@@ -307,7 +308,7 @@ class PCAPIRest(object):
             return self.fs(provider,userid,path)
         return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
 
-    def fs(self, provider, userid, path, process=None):
+    def fs(self, provider, userid, path, process=None, frmt=None):
         """
             Args:
                 provider: e.g. dropbox
@@ -319,7 +320,7 @@ class PCAPIRest(object):
                     when record contents should be updated if there is a name 
                     conflict.
         """
-        log.debug('fs( %s, %s, %s, %s)' % (provider, userid, path, process) )
+        log.debug('fs( %s, %s, %s, %s, %s)' % (provider, userid, path, process, frmt) )
 
         #TODO: make a ProviderFactory class once we have >2 providers
         error = self.auth(provider, userid) #initializes self.provider
@@ -375,6 +376,10 @@ class PCAPIRest(object):
                             validator = FormValidator(body)
                             if validator.validate():
                                 log.debug("valid html5")
+                                if frmt == 'android':
+                                    log.debug('it s an android')
+                                    parser = COBWEBFormParser(body)
+                                    body = parser.extract()
                                 return Response(body=body, status='200 OK', headers=headers)
                             else:
                                 log.debug("non valid html5")
