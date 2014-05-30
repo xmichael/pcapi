@@ -71,6 +71,7 @@ class COBWEBFormParser:
         element["input_type"] = itype
         element["value_type"] = vtype
         element["question"] = q
+        element["field-id"] = tag.get('id')
         element["id"] = tag.get('id').split("-")[2]
         element["children"] = {}
         return element
