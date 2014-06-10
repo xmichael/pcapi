@@ -5,7 +5,7 @@ pwd = os.path.dirname(os.path.realpath(__file__))
 paths = os.path.dirname(__file__).split("/")
 
 # TODO: SOMEONE HAS TO FIX THOSE ASSUMPTIONS
-root_path = os.sep((os.environ['HOME'], 'local', 'pcapi'))
+root_path = os.sep.join((os.environ['HOME'], 'local', 'pcapi'))
 
 # append the root directory in your python system path
 sys.path.append(root_path)
