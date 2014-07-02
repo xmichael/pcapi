@@ -73,7 +73,7 @@ class FsProvider(object):
     """
 
     ## STATIC variables
-    EMAIL_RE = re.compile(r'[^@ ./]+@[^@ ./]+\.[^@ ./]+$')
+    EMAIL_RE = re.compile(r'[^@ ./]+@[^@ ./]+\.[^@ /]+$')
     HEX_RE = re.compile(r'[0-9a-fA-F]+$')
     
     def __init__(self, userid):
