@@ -99,7 +99,7 @@ class PCAPIRest(object):
         return None # Success!
         
     
-    def create_records_cache(self,path):
+    def create_records_cache(self, provider, path):
         """ Creates an array of Records classed (s.a.) after parsing all records under `path'. 
         Assumes a valid session """
         records = []
@@ -112,7 +112,14 @@ class PCAPIRest(object):
         requests = threadpool.makeRequests(self.records_worker, records, self.append_records_cache, self.handle_exception)
         
         #insert the requests into the threadpool
-        pool = threadpool.ThreadPool(min(len(requests), 20))
+
+        # This is ugly but will need serious refactoring for the local provider.
+        # basically: if using local storage then just use one thread to avoid choking on the HD.
+        # For dropbox and other remote providers use multi-theading
+        if ( provider == "local" ):
+            pool = threadpool.ThreadPool(1)
+        else:
+            pool = threadpool.ThreadPool(min(len(requests), default_number))
         for req in requests:
             pool.putRequest(req)
             log.debug("Work request #%s added." % req.requestID)
@@ -174,7 +181,7 @@ class PCAPIRest(object):
             return error
         
         if self.request.method == "GET":
-            self.create_records_cache("records/")
+            self.create_records_cache(provider, "records/")
             records_cache = self.filter_data("media", path, userid)
             if str(flt) == "zip":
                 self.response.headers['Content-Type'] = 'application/zip'
@@ -262,8 +269,8 @@ class PCAPIRest(object):
                         return self.fs(provider,userid,path + "/record.json")
                     ### Process all filters one by one and return the result
                     filters = flt.split(",") if flt else []
-                    #records_cache = self.create_records_cache(path)
-                    self.create_records_cache(path)
+                    #records_cache = self.create_records_cache(path) <--- WHAT IS THAT???
+                    self.create_records_cache(provider, path)
                     ### GET / returns all records after applying filters
                     ### Each filter bellow will remove Records from records_cache
                     records_cache = self.filter_data(filters, None, userid)
