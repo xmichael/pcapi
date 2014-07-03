@@ -1,5 +1,5 @@
 import bottle
-from bottle import route, request, response, static_file
+from bottle import route, request, response, static_file, hook
 ## pcapi imports
 import logtool
 
@@ -95,6 +95,11 @@ def init_static_routes():
     def default_static():
         return static_file('index.html', root=root, download=False)
 
+########## CORS ##################
+
+@hook('after_request')
+def enable_cors():
+    response.headers['Access-Control-Allow-Origin'] = '*'
 
 ### Error pages ###
 @bottle.error(404)

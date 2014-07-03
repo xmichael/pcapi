@@ -482,7 +482,6 @@ class PCAPIRest(object):
             (provider,async,oauth_token, userid, `callback`) )
         log.debug("host: %s, port: %s" % \
             ( self.request.environ.get("SERVER_NAME", "NONE") , self.request.environ.get("SERVER_PORT") ) )
-        self.response.headers['Access-Control-Allow-Origin'] = '*'
         if ( provider == "local" ):
             # Local provider has no login yet. It just generates uuids
             if (not userid):
