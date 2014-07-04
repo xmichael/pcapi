@@ -15,6 +15,8 @@ from wand.image import Image
 from pcapi_exceptions import *
 
 log = logtool.getLogger("PCAPIRest", "pcapi")
+#global number of threads
+default_number=20
 
 class Record(object):
     """ Class to store record bodies and metadata in memory for fast access"""
