@@ -605,22 +605,33 @@ class PCAPIRest(object):
                 if "alt" in record["point"]:
                     alt = record["point"]["alt"]
                 fields = [record["name"], record["timestamp"], record["point"]["lon"], record["point"]["lat"], alt]
-                j=0
-                for f in record["fields"]:
-                    #check if the length of the headers is different than the length of the record fields. That means
-                    #that we need to add blank fields on the csv. 
-                    if len(record["fields"]) != len(field_headers):
-                        if str(f["id"]) != field_headers[j+1][0]:
-                            fields.append("")
-                    if "fieldcontain-image" in str(f["id"]):
-                        fields.append("http://%s/1.3/pcapi/records/dropbox/%s/%s/%s" % (self.request.environ.get("SERVER_NAME", "NONE"), userid, record["name"], str(f["val"])))
-                    elif "fieldcontain-track" in str(f["id"]):
-                        fields.append("http://%s/1.3/pcapi/records/dropbox/%s/%s/%s" % (self.request.environ.get("SERVER_NAME", "NONE"), userid, record["name"], str(f["val"])))
-                    elif "fieldcontain-audio" in str(f["id"]):
-                        fields.append("http://%s/1.3/pcapi/records/dropbox/%s/%s/%s" % (self.request.environ.get("SERVER_NAME", "NONE"), userid, record["name"], str(f["val"])))
-                    else:
-                        fields.append(str(f["val"]))
-                    j=j+1
+                
+                ## TODO: Remove those ugly ad-hoc checks. The Mobile app should submit records with same length and at the same order.
+                all_fields = [ x[0] for x in field_headers ]
+                for field in all_fields:
+                    # For some reason we need to skip fieldcontain-text-1 because it is omitted from the headers above (Why?)
+                    if field=="fieldcontain-text-1":
+                        #print "skipping Site-ID"
+                        continue
+                    
+                    found_field_value = False
+                    # check if field exists in record
+                    for f in record["fields"]:
+                        if str(f["id"]) == field:
+                            #bingo
+                            found_field_value = True
+                            #log.debug("Found value %s = %s" % (`f["id"]`, `f["val"]` ))
+                            if "fieldcontain-image" in str(f["id"]):
+                                fields.append("http://%s/1.3/pcapi/records/dropbox/%s/%s/%s" % (self.request.environ.get("SERVER_NAME", "NONE"), userid, record["name"], str(f["val"])))
+                            elif "fieldcontain-track" in str(f["id"]):
+                                fields.append("http://%s/1.3/pcapi/records/dropbox/%s/%s/%s" % (self.request.environ.get("SERVER_NAME", "NONE"), userid, record["name"], str(f["val"])))
+                            elif "fieldcontain-audio" in str(f["id"]):
+                                fields.append("http://%s/1.3/pcapi/records/dropbox/%s/%s/%s" % (self.request.environ.get("SERVER_NAME", "NONE"), userid, record["name"], str(f["val"])))
+                            else:
+                                fields.append(str(f["val"]))
+                    if not found_field_value:
+                        # append empty string if not field is not found in record
+                        fields.append("")                   
                 if i == 0:
                     csv_file.writerow(headers)
                     
