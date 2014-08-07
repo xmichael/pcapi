@@ -20,7 +20,7 @@ sys.path.append(os.path.join(pwd,'../wsgi'))
 import pcapi_devel, config, logtool
 
 userid = "testemail@domain.co.uk"
-textfilepath = config.get("test", "textfile")
+textfilepath = config.get("test", "testfile")
 imagefilepath = config.get("test", "imagefile")
 editorfilepath = config.get("test", "editorfile")
 

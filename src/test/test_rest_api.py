@@ -34,7 +34,7 @@ editorname = "myed.edtr"
 # to testing uploading a record
 recordname = "myrec.rec"
 
-textfilepath = config.get("test", "textfile")
+textfilepath = config.get("test", "testfile")
 imagefilepath = config.get("test", "imagefile")
 editorfilepath = config.get("test", "editorfile")
 
