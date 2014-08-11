@@ -4,6 +4,8 @@ from cobweb_parser import COBWEBFormParser
 from bottle import Response
 from StringIO import StringIO
 from operator import itemgetter
+import ogr
+
 import urllib2
 try:
     import threadpool
@@ -542,7 +544,7 @@ class PCAPIRest(object):
     
     def convertToGeoJSON(self, records, userid):
         """
-        function for converting from json to geojson
+        Export all records to geojson and return result. 
         """
         self.response.headers['Content-Type'] = 'application/json'
         features = []
@@ -557,6 +559,22 @@ class PCAPIRest(object):
         
         return json.dumps({"type": "FeatureCollection", "features": features})
     
+    def convertToDatabase(self, records, userid):
+        """
+        function for converting from json to a PostGIS database
+
+        Also converts all records to "/data.json" for further processing.
+        In the future "/data.json" can be incrementally for speed.
+        """
+        data = self.provider.realpath('/data.geojson')
+        log.debug('EXPORTING to ' + data)
+        geojson = self.convertToGeoJSON(records,userid)
+        with open(data, "w") as fp:
+            fp.write(geojson)
+            
+        # We can now convert to whatever OGR supports
+        return ogr.toPostGIS(data, userid)
+
     def convertToCSV(self, records, userid):
         """
         function for converting from json to csv
@@ -644,7 +662,7 @@ class PCAPIRest(object):
         f.close()
         os.remove(temp.name)
         return d
-    
+            
     def resizeImage(self, fp, path):
         """ method for resizing images. I decided to keep 480px as absolute size for the images to be resized"""
         with Image(blob=fp) as img:
@@ -746,6 +764,10 @@ class PCAPIRest(object):
                     return self.convertToKML(records_cache, userid)
                 elif frmt == "csv":
                     return self.convertToCSV(records_cache, userid)
+                elif frmt == "database":
+                    return self.convertToDatabase(records_cache, userid)
+                else:
+                    return {"error" :1 , "msg" : "unrecognised format: " + `frmt`}
         return records_cache
     
     def get_media(self, records_cache, exts, frmt):
