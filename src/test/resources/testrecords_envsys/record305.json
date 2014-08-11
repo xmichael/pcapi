@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Ivy",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Hedera helix",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2501.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Jeffery Miles",
+	"point" : {
+		"lon" : -3.8569,
+		"lat" : 52.5,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-04T09:16:59Z"
+}

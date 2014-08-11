@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "DownyBirch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula pubescens",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2053.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Randal Bridges",
+	"point" : {
+		"lon" : -3.7663,
+		"lat" : 52.559,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-10T06:06:24Z"
+}

@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2005.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Patricia Jefferson",
+	"point" : {
+		"lon" : -3.8944,
+		"lat" : 52.513,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-04T12:15:57Z"
+}

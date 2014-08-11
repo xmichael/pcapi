@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2400.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Ida Schultz",
+	"point" : {
+		"lon" : -3.899,
+		"lat" : 52.577,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-02-27T13:44:55Z"
+}

@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "SessileOak",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Quercus petraea",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2588.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Holly Parks",
+	"point" : {
+		"lon" : -3.8595,
+		"lat" : 52.477,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-28T16:17:52Z"
+}

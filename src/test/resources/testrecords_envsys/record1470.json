@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2213.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Clinton Bass",
+	"point" : {
+		"lon" : -4.0775,
+		"lat" : 52.432,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-02-27T10:43:00Z"
+}

@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1549.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Norma Mann",
+	"point" : {
+		"lon" : -3.5919,
+		"lat" : 52.596,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-24T19:55:47Z"
+}

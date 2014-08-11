@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Holly",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Ilex aquifolium",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2051.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Ira Greer",
+	"point" : {
+		"lon" : -3.8323,
+		"lat" : 52.504,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-27T12:13:40Z"
+}

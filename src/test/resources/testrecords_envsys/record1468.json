@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Holly",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Ilex aquifolium",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2159.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Holly Parks",
+	"point" : {
+		"lon" : -3.62,
+		"lat" : 52.686,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-25T12:42:13Z"
+}

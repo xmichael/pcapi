@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Rowan",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Sorbus aucuparia",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1604.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Steven Phelps",
+	"point" : {
+		"lon" : -3.7888,
+		"lat" : 52.66,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-06T07:56:24Z"
+}

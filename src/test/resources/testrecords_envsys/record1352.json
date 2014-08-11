@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "DownyBirch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula pubescens",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2159.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Steven Phelps",
+	"point" : {
+		"lon" : -3.696,
+		"lat" : 52.717,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-06T06:05:11Z"
+}

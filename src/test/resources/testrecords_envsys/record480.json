@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "DownyBirch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula pubescens",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1405.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Rufus Cooper",
+	"point" : {
+		"lon" : -3.958,
+		"lat" : 52.581,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-08T14:02:13Z"
+}

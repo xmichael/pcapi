@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1645.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Jamie Stanley",
+	"point" : {
+		"lon" : -3.7197,
+		"lat" : 52.694,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-06T14:19:33Z"
+}

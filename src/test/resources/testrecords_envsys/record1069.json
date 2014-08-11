@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "DownyBirch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula pubescens",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2454.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Tony Harris",
+	"point" : {
+		"lon" : -3.6069,
+		"lat" : 52.762,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-02-27T19:55:03Z"
+}
