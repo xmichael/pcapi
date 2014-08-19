@@ -9,8 +9,13 @@ Installation
 ------------
 
 The system should have the following packages installed:
+ - libxml 
  - libspatialite ( version 3.0 and above )
  - python-bottle ( version >= 0.10 )
+
+```
+   sudo apt-get install libxml2-dev libxslt1-dev python-dev
+```
 
 Then the application can be executed by either:
 
