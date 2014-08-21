@@ -372,7 +372,7 @@ class PCAPIRest(object):
                                 log.debug("asset in record")
                                 obj = json.loads(body)
                                 log.debug(obj)
-                                for field in obj["fields"]:
+                                for field in obj["properties"]["fields"]:
                                     if "image-" in field["id"] or "audio-" in field["id"]:
                                         res = self.provider.search(path.replace("record.json", ""), field["val"])
                                         log.debug(len(res.md))
@@ -649,7 +649,7 @@ class PCAPIRest(object):
                                 fields.append(str(f["val"]))
                     if not found_field_value:
                         # append empty string if not field is not found in record
-                        fields.append("")                   
+                        fields.append("")
                 if i == 0:
                     csv_file.writerow(headers)
                     
