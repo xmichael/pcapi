@@ -44,16 +44,16 @@ def assets(provider, userid, path="/"):
     return PCAPIRest(request,response).assets(provider, userid, path, flt)
 
 ###  /records/... API ###
-@route('/records/<provider>/<userid>/',method=["GET","PUT","POST","DELETE"] )
-@route('/records/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE"] )
+@route('/records/<provider>/<userid>/',method=["GET","PUT","POST","DELETE","OPTIONS"] )
+@route('/records/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE","OPTIONS"] )
 def records(provider, userid, path="/"):
     flt = request.GET.get("filter")
     return PCAPIRest(request,response).records(provider, userid, path, flt)
 
 ###  /editors/... API ###
 
-@route('/editors/<provider>/<userid>/',method=["GET","POST","PUT","DELETE"] )
-@route('/editors/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE"] )
+@route('/editors/<provider>/<userid>/',method=["GET","POST","PUT","DELETE","OPTIONS"] )
+@route('/editors/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE","OPTIONS"] )
 def editors(provider, userid, path="/"):
     flt = request.GET.get("format")
     return PCAPIRest(request,response).editors(provider, userid, path, flt)
@@ -70,9 +70,9 @@ def tiles(provider, userid, path="/"):
 @route('/fs/<provider>/<userid>/',method=["GET","POST","PUT","DELETE"] )
 @route('/fs/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE"] )
 def fs(provider, userid, path="/"):
-    """ Upload file to path (as documented in the API docs)   
+    """ Upload file to path (as documented in the API docs)
     """
-    return PCAPIRest(request, response).fs(provider, userid, path)     
+    return PCAPIRest(request, response).fs(provider, userid, path)
 
 ###  /auth/... API ###
 
@@ -100,6 +100,7 @@ def init_static_routes():
 @hook('after_request')
 def enable_cors():
     response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS, DELETE'
 
 ### Error pages ###
 @bottle.error(404)
