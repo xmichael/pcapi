@@ -15,6 +15,7 @@ You can install the prerequisites by issueing the commands in terminal which are
 * libxml2-dev - sudo apt-get install libxml2-dev
 * libxslt1-dev - sudo apt-get install libxslt1-dev 
 * python-dev - sudo apt-get install python-dev
+* jinja2 - sudo pip install jinja2
 
 ### Run development server first time
 
