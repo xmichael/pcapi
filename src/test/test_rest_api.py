@@ -18,7 +18,7 @@ pwd = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(pwd,'../lib')) # to find the classes to test
 sys.path.append(os.path.join(pwd,'../wsgi'))
 
-import pcapi, config, logtool
+import pcapi_devel, config, logtool, dbox_provider
 from form_validator import FormValidator, Editor
 
 # User ID should exist in DATABASE
@@ -44,7 +44,7 @@ localfile = open ( textfilepath , "r")
 #schemafile = open ( schemafilepath , "r")
 
 # Application
-app = TestApp(pcapi.application)
+app = TestApp(pcapi_devel.application)
 
 def _verify_token():
     """

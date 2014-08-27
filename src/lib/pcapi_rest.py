@@ -692,7 +692,7 @@ class PCAPIRest(object):
                 tmp_cache = []
                 for x in records_cache:
                     for r in x.content.itervalues():
-                        if x.content is not None and r["editor"].lower() == f_id:
+                        if x.content is not None and r["properties"]["editor"].lower() == f_id:
                             tmp_cache.append(x)
                 records_cache = tmp_cache
                 #records_cache = [r for r in records_cache.itervalues() if r is not None and r.content["editor"].lower() == f_id]
@@ -733,8 +733,8 @@ class PCAPIRest(object):
                     for r in x.content.itervalues():
                         log.debug(r["point"])
                         try:
-                            lon = float(r["point"]["lon"])
-                            lat = float(r["point"]["lat"])
+                            lon = float(r["geometry"]["coordinates"][0])
+                            lat = float(r["geometry"]["coordinates"][1])
                         except ValueError:
                             return {"msg": "Aborting due to error parsing lat/lon of record %s" \
                             % r["name"], "error" : 1}
@@ -778,7 +778,7 @@ class PCAPIRest(object):
             tmp_cache = []
             for x in records_cache:
                 for key, r in x.content.iteritems():
-                    for field in r["fields"]:
+                    for field in r["properties"]["fields"]:
                         if self.check_extension(exts, field["val"]):
                             if frmt:
                                 x.content = "%s/%s" % (key, field["val"])
@@ -793,7 +793,7 @@ class PCAPIRest(object):
             dirpath = tempfile.mkdtemp()
             for x in records_cache:
                 for key, r in x.content.iteritems():
-                    for field in r["fields"]:
+                    for field in r["properties"]["fields"]:
                         if self.check_extension(exts, field["val"]):
                             buf, meta = self.provider.get_file_and_metadata(os.path.join("records", key, field["val"]))
                             f = open(os.path.join(dirpath, field["val"]), "w")
