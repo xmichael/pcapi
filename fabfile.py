@@ -116,11 +116,16 @@ def _server():
 @task
 def setup():
     """Prepares one or more servers for deployment"""
+    #create ~/dist/pcapi
     run("mkdir -p %(domain_path)s" % { 'domain_path':env.domain_path })
+    #create ~/dist/etc
     run("mkdir -p %(domain_path)s/etc" % { 'domain_path':env.domain_path })
+    #upload requirements.txt
     put("%(env_file)s" % { 'env_file':env.env_file }, "%(domain_path)s/etc" % { 'domain_path':env.domain_path })
+    #create releases folder ~/dist/pcapi/releases
     run("mkdir -p %(releases_path)s" % { 'releases_path':env.releases_path })
-    run("mkdir -p %(current)s" % { 'current':env.current_path })
+    #run("mkdir -p %(current)s" % { 'current':env.current_path })
+    #create data folder ~/dist/pcapi/data
     run("if [ ! -d %(domain_path)s/data ]; then mkdir -p %(domain_path)s/data; fi" % { 'domain_path':env.domain_path })
 
 @task
@@ -268,7 +273,12 @@ def _remote_configure_ini():
 
 def _symlink(symlink, main_version):
     """Updates the symlink to the most recently deployed version"""
-    if symlink.lower() == 'y':
+    #create symlink for data ~/dist/pcapi/data --> ~/dist/pcapi/releases/<release>/data
+    run("if [ -d %(current_release)s/data ]; then rm %(current_release)s/data; fi" % { 'current_release':env.current_release })
+    run("ln -s %(domain_path)s/data %(current_release)s/data" % { 'domain_path':env.domain_path, 'current_release':env.current_release })
+
+    #create symlink for release ~/dist/pcapi/releases/<release> --> ~/dist/pcapi/current
+    if symlink.lower() == 'y' or symlink.lower() == '':
         run("if [ -d %(current_path)s ]; then rm %(current_path)s; fi" % { 'current_path':env.current_path, 'main_version': main_version })
         run("ln -s %(current_release)s %(current_path)s" % { 'current_release':env.current_release, 'current_path':env.current_path })
     else:

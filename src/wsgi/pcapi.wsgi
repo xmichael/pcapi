@@ -4,7 +4,9 @@ pwd = os.path.dirname(os.path.realpath(__file__))
 
 paths = os.path.dirname(__file__).split("/")
 
+#this is for local deployment
 #root_path = os.sep.join((os.environ['HOME'], 'local', 'pcapi'))
+#this is for released ones
 root_path = os.sep.join((pwd, '..', '..'))
 
 # append the root directory in your python system path
