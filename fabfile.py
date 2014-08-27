@@ -101,6 +101,7 @@ def _get_ini():
 def server(serv):
     """Defines live environment live:'serv1' for cutthroat, live:'serv2' for brook"""
     _check_config()
+    generate_config()
     env.hosts = [_config("hosts", serv),]
     env.user = _config("user", serv)
     env.port = _config("port", serv)
