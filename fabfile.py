@@ -1,5 +1,6 @@
 from fabric.api import env, hosts, lcd, local, task, run, put, prompt, sudo
 from fabric.contrib.project import rsync_project
+from jinja2 import Environment, PackageLoader, FileSystemLoader
 import os, ConfigParser
 import getpass
 
@@ -19,6 +20,9 @@ fab server:'serv2' setup deploy
 @task
 def deploy_local():
     """Defines local environment"""
+    #generate the resources/config.ini
+    _check_config()
+    generate_config()
     env.local = 'local'
     #pcapi
     env.app_name = _config('app_name')
@@ -147,7 +151,6 @@ def _check_config():
     global config
 
     root = CURRENT_PATH
-    print root
     conf_dir = os.sep.join((root, 'etc'))
     conf_file = os.sep.join((conf_dir, 'config.ini'))
     if not os.path.exists(conf_file):
@@ -204,6 +207,22 @@ def _checkout():
     rsync_project(local_dir=env.app_local_name, remote_dir=env.current_release, exclude='.git,.pyc,.gitignore')
     #put("%(app_local)s" % { 'app_local':env.app_local }, "%(current_release)s" % { 'current_release':env.current_release })
     return refspec
+
+@task
+def generate_config():
+    """generate config with dropbox keys, db details etc"""
+    _check_config()
+    templates = os.sep.join((CURRENT_PATH, 'etc'))
+    out_file = os.sep.join((CURRENT_PATH, 'src', 'resources', 'config.ini'))
+    environ = Environment(loader=FileSystemLoader(templates))
+    template = environ.get_template("config.tmpl")
+    output = template.render(DBOX_APP_KEY=_config('app_key'),
+                             DBOX_SECRET_KEY=_config('app_secret'),
+                             database=_config('database'),
+                             user=_config('user'),
+                             password=_config('password'),
+                             port=_config('port'))
+    _write_data(out_file, output)
 
 def _find_version():
     refspec = local('git tag | sort -V | tail -1 | cut -d"v" -f2', capture=True)
@@ -334,3 +353,9 @@ def _config(var, section='install'):
         conf_file = os.sep.join((CURRENT_PATH, 'etc', 'config.ini'))
         config.read(conf_file)
     return config.get(section, var)
+
+def _write_data(fil, filedata):
+    """ TODO """
+    f = open(fil, 'w')
+    f.write(filedata)
+    f.close()

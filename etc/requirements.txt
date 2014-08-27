@@ -7,3 +7,4 @@ lxml==3.1.2
 simplekml==1.2.1
 threadpool==1.2.7
 WebTest==2.0.4
+Jinja2==2.7.2
