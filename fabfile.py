@@ -9,16 +9,11 @@ config=None
 """
 example uses:
 for server1:
-fab live:'serv1' setup deploy
+fab server:'serv1' setup deploy
 
 for server2:
-fab live:'serv2' setup deploy
+fab server:'serv2' setup deploy
 
-for beta:
-fab beta setup deploy
-
-for devel:
-fab devel setup deploy
 """
 
 @task
@@ -56,6 +51,7 @@ def deploy_local():
         # create sql lie
         _install_custom_locally_pysqlite()
 
+        #create symlink for the src
         local("ln -s %(current_path)s/src %(domain_path)s/pcapi" % { 'current_path': CURRENT_PATH, 'domain_path':env.domain_path})
         local("mkdir {0}/data".format(env.domain_path))
         # don't like sudo!!
@@ -100,6 +96,7 @@ def _get_ini():
 @task
 def server(serv):
     """Defines live environment live:'serv1' for cutthroat, live:'serv2' for brook"""
+    _check_config()
     env.hosts = [_config("hosts", serv),]
     env.user = _config("user", serv)
     env.port = _config("port", serv)
@@ -124,6 +121,7 @@ def setup():
     put("%(env_file)s" % { 'env_file':env.env_file }, "%(domain_path)s/etc" % { 'domain_path':env.domain_path })
     run("mkdir -p %(releases_path)s" % { 'releases_path':env.releases_path })
     run("mkdir -p %(current)s" % { 'current':env.current_path })
+    run("if [ ! -d %(domain_path)s/data ]; then mkdir -p %(domain_path)s/data; fi" % { 'domain_path':env.domain_path })
 
 @task
 def deploy():
@@ -136,6 +134,55 @@ def _update():
     _update_env()
     symlink = prompt('Do you want to make it live (=symlink it)? [y/N]')
     _symlink(symlink, main_version)
+
+def _check_config():
+    """
+    If config.ini exists update from remote location, otherwise prompt user for location
+    """
+    global config
+
+    root = CURRENT_PATH
+    print root
+    conf_dir = os.sep.join((root, 'etc'))
+    conf_file = os.sep.join((conf_dir, 'config.ini'))
+    if not os.path.exists(conf_file):
+        msg = '\nProvide location of config file > '
+        answer = raw_input(msg).strip()
+        if len(answer) > 0:
+            if answer.find('@') == -1:
+                if os.path.exists(answer):
+                    local('cp {0} {1}'.format(answer, conf_file))
+                else:
+                    print "File not found, can't continue."
+                    exit(0)
+            else:
+                port = _config('location_port')
+                if port:
+                    local('scp -P {0} {1} {2}'.format(port, answer, conf_dir))
+                else:
+                    local('scp {0} {1}'.format(answer, conf_dir))
+
+    # pick up any changes from remote config
+    location = _config('location')
+    print location
+    if location[0: 4] == 'git@':
+        # config is in secure git repo
+        with lcd(conf_dir):
+            # work out how deep config file is in directory structure to flatten it
+            parts = location.split(' ')
+            strip_comp = len(parts[len(parts) - 1].split('/')) - 1
+
+            # fetch file from git repo
+            local('git archive --remote={0} | tar -x --strip-components {1}'.format(
+                location, strip_comp))
+    elif location.find('@') != -1:
+        port = _config('location_port')
+        if port:
+            local("rsync -avz -e 'ssh -p {0}' {1} {2}".format(
+                port, location, conf_dir))
+        else:
+            local('rsync -avz {0} {1}'.format(location, conf_dir))
+    config = None # make sure it is re-read
 
 def _checkout():
     """Checkout code to the remote servers"""
@@ -174,6 +221,8 @@ def _find_version():
             print "Don't forget to run the command <git stash pop> after the app is installed"
         else:
             refspec = prompt('Create dev folder to build in [e.g. dev]: ')
+            if refspec == "":
+                refspec = "dev"
     return refspec
 
 def _update_env():
@@ -182,6 +231,7 @@ def _update_env():
         _releases()
     run("cd %(current_release)s; virtualenv --no-site-packages ." % { 'current_release':env.current_release })
     run("cd %(current_release)s; ./bin/pip -q install -r %(domain_path)s/%(env_file)s" % { 'current_release':env.current_release, 'domain_path':env.domain_path, 'env_file':env.env_file })
+    run("mkdir -p %(run_folder)s/logs" % { 'run_folder':env.current_release })
     _install_custom_remotely_pysqlite()
     _remote_configure_ini()
 
@@ -195,9 +245,6 @@ def _install_custom_remotely_pysqlite():
     put("setup.cfg", "%(tmp_path)s/pysqlite-2.6.3" % { 'tmp_path': tmp_path })
     run("cd %(home)s/downloads/pysqlite-2.6.3; %(current_release)s/bin/python setup.py install" % {'home': env.home, 'current_release':env.current_release})
     local("rm setup.cfg")
-    ####
-    run("mkdir -p %(run_folder)s/logs" % { 'run_folder':env.current_release })
-    run("mkdir -p %(run_folder)s/data" % { 'run_folder':env.current_release })
 
 def _prepare_pysqlite_setup():
     """create the custom setup.cfg"""
@@ -222,8 +269,8 @@ def _remote_configure_ini():
 def _symlink(symlink, main_version):
     """Updates the symlink to the most recently deployed version"""
     if symlink.lower() == 'y':
-        run("if [ -d %(current_path)s/%(main_version)s ]; then rm %(current_path)s/%(main_version)s; fi" % { 'current_path':env.current_path, 'main_version': main_version })
-        run("ln -s %(current_release)s %(current_path)s/%(main_version)s" % { 'current_release':env.current_release, 'current_path':env.current_path, 'main_version': main_version })
+        run("if [ -d %(current_path)s ]; then rm %(current_path)s; fi" % { 'current_path':env.current_path, 'main_version': main_version })
+        run("ln -s %(current_release)s %(current_path)s" % { 'current_release':env.current_release, 'current_path':env.current_path })
     else:
         print "You need to run these two commands to make your service live: "
         print "*********************************************************"

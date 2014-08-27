@@ -8,7 +8,7 @@
 
 ## Devel's python has "surprisingly" disabled sqlite3 support unlike 99.9% of sane python installations.
 try:
-    # make up for inconsistencies between normal linux distributions, devel.edina, rainbow.edina etc. etc.                                                                                                                      
+    # make up for inconsistencies between normal linux distributions, devel.edina, rainbow.edina etc. etc.
     import pysqlite2.dbapi2 as db
     from pysqlite2.dbapi2 import OperationalError
 except ImportError:
