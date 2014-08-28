@@ -21,8 +21,8 @@ fab server:'serv2' setup deploy
 def deploy_local():
     """Defines local environment"""
     #generate the resources/config.ini
-    _check_config()
-    generate_config()
+    #_check_config()
+    #generate_config()
     env.local = 'local'
     #pcapi
     env.app_name = _config('app_name')
