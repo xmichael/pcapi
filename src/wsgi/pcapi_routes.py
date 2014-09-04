@@ -99,6 +99,9 @@ def init_static_routes():
 
 @hook('after_request')
 def enable_cors():
+    log.debug(request.headers.get('persistent-id'))
+    #here's the id we need for uploading data
+    log.debug(request.headers.get('employeeNumber'))
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS, DELETE'
 
