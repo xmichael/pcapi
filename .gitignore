@@ -1,5 +1,5 @@
 tmp
-.pyc
+*.pyc
 .DS_Store
 bower_components
 node_modules
