@@ -487,28 +487,28 @@ class PCAPIRest(object):
             log.debug( logtool.pp(res))
         elif ( provider == "dropbox"):
             dbox = dbox_provider.DropboxProvider()
-            if (userid):
-                # Resume session or Poll
-                if (async):
-                    if not_approved:
-                        log.debug("Revoke user_id %s" % userid)
-                        dbox.revoke(userid)
-                    else:
-                        #Poll!
-                        log.debug("got polling request for :" + userid)
-                    return dbox.probe(userid)
-                else:
-                    #just resume:
-                    log.debug("resuming session " + userid)
-                    return dbox.login(req_key=userid)
-            if (oauth_token):
+            if oauth_token:
                 # it's a callback from dropbox and not from user. Try to revive session
                 try:
                     msg = dbox.callback(oauth_token)
                     log.debug("Callback WORKED!: " + msg)
                     return "Logged in! Feel free to close your browser."
                 except DBException as e:
-                    return {"error":1 , "msg": str(e)}
+                    return {"error": 1, "msg": str(e)}
+
+            if userid:
+                # Resume session or Poll
+                if (async):
+                    if not_approved:
+                        log.debug("Revoke user_id %s" % userid)
+                        dbox.revoke(userid)
+                    else:
+                        log.debug("got polling request for :" + userid)
+                    return dbox.probe(userid)
+                else:
+                    #just resume:
+                    log.debug("resuming session " + userid)
+                    return dbox.login(req_key=userid)
             res = dbox.login(req_key=None, callback=callback, async=async)
             log.debug("dropbox_login response: ")
             log.debug( logtool.pp(res))
