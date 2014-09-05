@@ -466,11 +466,12 @@ class PCAPIRest(object):
     def login(self,provider,userid=None):
         log.debug("URL: " + self.request.url)
         # Get optional "async", "oath_token" parameters otherwise assume None
-        async = self.request.GET.get("async",None)
+        async = True if self.request.GET.get("async", None) == "true" else False
         # oauth_token is  only for "callback" i.e. when the request is coming from dropbox
         oauth_token = self.request.GET.get("oauth_token",None)
+        not_approved = True if self.request.GET.get("not_approved", None) == "true" else False
         callback = self.request.GET.get("callback",False)
-        callback = self.request.url if async=="true" else callback
+        callback = self.request.url if async else callback
         log.debug("provider: %s, async: %s, oauth_token: %s, userid: %s, callback: %s" % \
             (provider,async,oauth_token, userid, `callback`) )
         log.debug("host: %s, port: %s" % \
@@ -489,8 +490,12 @@ class PCAPIRest(object):
             if (userid):
                 # Resume session or Poll
                 if (async):
-                    #Poll!
-                    log.debug("got polling request for :" + userid)
+                    if not_approved:
+                        log.debug("Revoke user_id %s" % userid)
+                        dbox.revoke(userid)
+                    else:
+                        #Poll!
+                        log.debug("got polling request for :" + userid)
                     return dbox.probe(userid)
                 else:
                     #just resume:
@@ -504,7 +509,7 @@ class PCAPIRest(object):
                     return "Logged in! Feel free to close your browser."
                 except DBException as e:
                     return {"error":1 , "msg": str(e)}
-            res = dbox.login(req_key=None, callback=callback)
+            res = dbox.login(req_key=None, callback=callback, async=async)
             log.debug("dropbox_login response: ")
             log.debug( logtool.pp(res))
         else:
