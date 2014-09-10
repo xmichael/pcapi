@@ -2,14 +2,16 @@
 # Test tokens
 #############################################
 
-import os, sys, unittest
+import os
+import sys
+import unittest
 #from ipdb import set_trace
 
-## Also libraries to the python path
+# Also libraries to the python path
 pwd = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.join(pwd,'../lib')) # to find the classes to test
+sys.path.append(os.path.join(pwd, '../'))  # to find the classes to test
 
-from db import tokens
+from pcapi.db import tokens
 
 #These are dummy values!
 userid = 'aabbcc7aabbc9de'

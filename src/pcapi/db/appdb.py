@@ -1,5 +1,6 @@
-import spatialite, logtool
-from DBException import DBException
+from pcapi import logtool
+from pcapi.db import spatialite
+from pcapi.pcapi_exceptions import DBException
 
 """ High Level PCAPI Wrapper arround Spatialite
 Supports:

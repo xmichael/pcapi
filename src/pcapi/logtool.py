@@ -1,6 +1,10 @@
 ## Just some utility functions for logging messages. Most important is getLogger.
 
-import sys, pprint, json, logging, config
+import sys
+import pprint
+import json
+import logging
+from pcapi import config
 from logging import handlers
 
 ### Constants ###

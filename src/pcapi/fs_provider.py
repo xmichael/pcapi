@@ -6,10 +6,13 @@
 # Might revisit once we have authentication in place!
 
 
-import os, time, shutil, re
-import logtool, config, helper
+import os
+import time
+import shutil
+import re
+from pcapi import logtool, config, helper
 
-from pcapi_exceptions import FsException
+from pcapi.pcapi_exceptions import FsException
 
 log = logtool.getLogger("FsProvider", "pcapi")
 

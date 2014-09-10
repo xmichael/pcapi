@@ -6,7 +6,7 @@ Prerequisites: ogr2ogr installed and specified under resources/config.ini file
 """
 
 import subprocess
-import logtool, config, helper
+from pcapi import logtool, config
 
 LOG = logtool.getLogger("ogr", "filters")
 OGR2OGR = config.get("ogr", "ogr2ogr")

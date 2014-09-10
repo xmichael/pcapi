@@ -15,7 +15,7 @@ except ImportError:
     import sqlite3.dbapi2 as db
     from sqlite3.dbapi2 import OperationalError
 import os
-import config, logtool
+from pcapi import config, logtool
 
 ### Constants ###
 log = logtool.getLogger("spatialite", "pcapi")

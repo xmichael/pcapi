@@ -1,7 +1,8 @@
 #!/usr/bin/python
 #-*- mode: python; -*-
 ################# INIT ###################
-import os, sys
+import os
+import sys
 
 pwd = os.path.dirname(os.path.realpath(__file__))
 
@@ -12,17 +13,19 @@ sys.path.append(root_path)
 # ... and the environment path to keep config.py happy.
 os.environ['ROOT_PATH'] = root_path
 
-print sys.path
+# print sys.path
 
 ## Change working directory so relative paths work
 pwd = os.path.dirname(os.path.realpath(__file__))
 os.chdir(pwd)
 
 ## Also add library to the python path
-sys.path.append(os.path.join(pwd,'../lib'))
+sys.path.append(os.path.join(pwd,'../'))
 sys.path.append(pwd)
 
-import pcapi_routes, config, bottle
+from pcapi import config
+import pcapi_routes
+import bottle
 
 ##################################################
 #################### MAIN ########################

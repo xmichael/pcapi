@@ -1,5 +1,7 @@
-import html5lib, re, json, os
+import json
+import os
 from bs4 import BeautifulSoup
+
 
 class COBWEBFormParser:
 

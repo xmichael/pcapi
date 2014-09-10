@@ -1,20 +1,28 @@
-import re, json, time, simplekml, sys, csv, tempfile, os, copy, zipfile, uuid
-from form_validator import FormValidator, Editor
-from cobweb_parser import COBWEBFormParser
+import csv
+import json
+import os
+import simplekml
+import sys
+import tempfile
+import uuid
+import urllib2
+import time
+import zipfile
+
 from bottle import Response
 from StringIO import StringIO
 from operator import itemgetter
-import ogr
+from wand.image import Image
 
-import urllib2
 try:
     import threadpool
 except ImportError:
     sys.stderr.write("Error: Can't find threadpool...")
 
-import dbox_provider, fs_provider, logtool
-from wand.image import Image
-from pcapi_exceptions import *
+from pcapi import ogr, dbox_provider, fs_provider, logtool
+from pcapi.form_validator import FormValidator, Editor
+from pcapi.cobweb_parser import COBWEBFormParser
+from pcapi.pcapi_exceptions import DBException, FsException
 
 log = logtool.getLogger("PCAPIRest", "pcapi")
 #global number of threads

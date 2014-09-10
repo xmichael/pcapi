@@ -2,7 +2,9 @@
 ###############################################
 
 import json
-import os, sys, unittest, re
+import os
+import sys
+import unittest
 import urllib2
 
 from urllib2 import URLError
@@ -13,13 +15,14 @@ try:
 except ImportError:
     sys.stderr.write("Error: Can't find threadpool...")
 
-## Also libraries to the python path
+# Also libraries to the python path
 pwd = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.join(pwd,'../lib')) # to find the classes to test
-sys.path.append(os.path.join(pwd,'../wsgi'))
+sys.path.append(os.path.join(pwd, '../'))  # to find the classes to test
+sys.path.append(os.path.join(pwd, '../wsgi'))
 
-import pcapi_devel, config, logtool, dbox_provider
-from form_validator import FormValidator, Editor
+import pcapi_devel
+from pcapi import config, dbox_provider
+from pcapi.form_validator import FormValidator, Editor
 
 # User ID should exist in DATABASE
 userid = None

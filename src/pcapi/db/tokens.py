@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import spatialite, logtool
+import spatialite
+from pcapi import logtool
 
 #################### Dropbox,flickr etc. credential storage management #############
 """  Wrapper functions around SQL command use for reading/writing/seaching access

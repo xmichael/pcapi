@@ -3,24 +3,25 @@
 
 # Unit test for connecting to Dropbox bottle webapp
 
-import os, sys, unittest
-#from ipdb import set_trace
+import os
+import sys
+import unittest
+# from ipdb import set_trace
 
-## Also libraries to the python path
+# Also libraries to the python path
 pwd = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.join(pwd,'../lib')) # to find the classes to test
-sys.path.append(os.path.join(pwd,'../wsgi'))
+sys.path.append(os.path.join(pwd, '../'))  # to find the classes to test
+sys.path.append(os.path.join(pwd, '../wsgi'))
 
-import pcapi
+import pcapi_devel
 from webtest import TestApp
 import time
 
-app = TestApp(pcapi.application)
 #pdb.set_trace()
 class TestWSGI(unittest.TestCase):
 
     def setUp(self):
-        self.app = TestApp(pcapi.application)
+        self.app = TestApp(pcapi_devel.application)
         # dummy file
         self.localimg = "./foo.txt"
 
@@ -68,4 +69,3 @@ class TestWSGI(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

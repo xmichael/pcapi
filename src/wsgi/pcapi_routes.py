@@ -1,7 +1,7 @@
 import bottle
 from bottle import route, request, response, static_file, hook
 ## pcapi imports
-import logtool
+from pcapi import logtool
 
 log = logtool.getLogger("pcapi")
 
@@ -9,8 +9,8 @@ log = logtool.getLogger("pcapi")
 #dboxpath = config.get("path","dropbox_path")
 #sys.path.append(os.path.join(pwd,dboxpath))
 
-from pcapi_exceptions import *
-from pcapi_rest import PCAPIRest
+from pcapi.pcapi_exceptions import *
+from pcapi.pcapi_rest import PCAPIRest
 
 ################ ROUTES ####################
 

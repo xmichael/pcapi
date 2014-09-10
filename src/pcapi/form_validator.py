@@ -1,11 +1,13 @@
 from bs4 import BeautifulSoup
-#from lxml.html.clean import clean_html, Cleaner
-#from lxml import etree
-import logtool, config
-from StringIO import StringIO
+# from lxml.html.clean import clean_html, Cleaner
+# from lxml import etree
+from pcapi import logtool
+# from pcapi import config
+# from StringIO import StringIO
 import html5lib
-from html5lib import treebuilders, treewalkers, serializer
-from html5lib.filters import sanitizer
+from html5lib import treebuilders
+# from html5lib import treewalkers, serializer
+# from html5lib.filters import sanitizer
 
 log = logtool.getLogger("FormValidator", "pcapi")
 
@@ -38,7 +40,7 @@ class Editor(object):
             else:
                 label = el_type
         return label
-        W
+
     def validate(self, el_type, el_id):
         for tag in self.soup.findAll("div", {"id": el_id}):
             for sibling in tag.next_siblings:

@@ -8,16 +8,19 @@ Local provider has no oauth implementation yet. User will just need to:
 2. PUT/POST before "reading" anything. No user directory is created unless
    something is uploaded.
 """
-import os, sys, unittest
+import os
+import sys
+import unittest
 
 from webtest import TestApp
 
 ## Also libraries to the python path
 pwd = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.join(pwd,'../lib')) # to find the classes to test
-sys.path.append(os.path.join(pwd,'../wsgi'))
+sys.path.append(os.path.join(pwd, '../'))  # to find the classes to test
+sys.path.append(os.path.join(pwd, '../wsgi'))
 
-import pcapi_devel, config, logtool
+import pcapi_devel
+from pcapi import config
 
 userid = "testemail@domain.co.uk"
 textfilepath = config.get("test", "testfile")

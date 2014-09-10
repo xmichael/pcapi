@@ -1,6 +1,9 @@
-import config, logtool, re, time
+import re
+import time
+from pcapi import config, logtool
+from pcapi.db import tokens
 from dropbox import client, session, rest
-from db import tokens
+
 ### Static Variables ###
 APP_KEY = config.get("dropbox","app_key")
 APP_SECRET = config.get("dropbox","app_secret")
