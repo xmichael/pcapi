@@ -1,4 +1,4 @@
-## This is a Singleton class to return a spatialite instance. 
+## This is a Singleton class to return a spatialite instance.
 ## Note to java coders: Singletons in python are just modules with plain functions.
 ##
 ## Usage:
@@ -28,7 +28,7 @@ log.debug(DB)
 # full path of libspatialite.so.3
 SPATIALPLUGIN = config.get("path", "libspatialite")
 
-# creating/connecting the test_db. 
+# creating/connecting the test_db.
 # "check_same_thread" turns off some false alarms from sqlite3.
 # NOTE: mod_wsgi runs these global variables in *different* processes for each request.
 con = db.connect(DB, check_same_thread=False)
@@ -44,11 +44,11 @@ else:
 def execute(sql, args=()):
     """
         Execute *sql* statement using list *args* for sql substitution.
-        
+
         PC-API was meant to be fault tolerant to all disk/database faults. This function
         tries to handle all possible errors by first regenerating missing tables and falling back
         to using a memory database if all else fails.
-        
+
         Args:
             sql:  SQL statement
             args (optional) : list of susbtitution values
@@ -67,7 +67,7 @@ def execute(sql, args=()):
                                        reqsec text,acckey text,accsec text,dt date default current_date);
         """
         )
-        
+
         con.execute("""CREATE TABLE IF NOT EXISTS "temp_request" ( userid text unique, reqsec text );""")
         try:
             # re-run failed operation
@@ -79,7 +79,7 @@ def execute(sql, args=()):
             log.critical("Fatal exception: Cannot access database")
             log.critical("Make sure this file exists and is writable and not corrupted: " + DB)
             log.critical("Will now resume operation in RAM-only mode to avoid downtime")
-            # switch *temporarily* to  memory until someone fixes the database. It is not clear if 
+            # switch *temporarily* to  memory until someone fixes the database. It is not clear if
             # different processes will have the *same* memory sqlite3 database
             # s.a.  file::memory:?cache=shared
             DB = ":memory:"

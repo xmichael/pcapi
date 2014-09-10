@@ -29,31 +29,31 @@ class TestDropbox(unittest.TestCase):
     def test_all_cookie_functions(self):
         ## Create temp token
         tokens.save_unverified_request(userid,req_secret)
-        
+
         ## Read request list -> success
         rpair = tokens.get_request_pair(userid)
         self.assertEqual (rpair[0],userid)
         self.assertEqual (rpair[1],req_secret)
-        
+
         ## Read access list -> None
         apair = tokens.get_access_pair(userid)
 
         #set_trace()
         self.assertFalse(apair)
-        
+
         ## Save access list
         tokens.save_access_tokens(userid, req_secret, acc_key, acc_secret)
-        
+
         ## Read access list (again) -> success
         apair = tokens.get_access_pair(userid)
 
-        
+
         self.assertEqual (apair[0],acc_key)
-        self.assertEqual (apair[1],acc_secret)        
+        self.assertEqual (apair[1],acc_secret)
 
     def tearDown(self):
         tokens.delete_token(userid)
-        
+
 if __name__ == '__main__':
     unittest.main()
 

@@ -34,4 +34,3 @@ def getCCMap():
              "BY-NC-DC":"http://creativecommons.org/licenses/by-nc-nd/3.0"
     }
     return ccmap
-

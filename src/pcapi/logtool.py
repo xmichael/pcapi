@@ -28,7 +28,7 @@ def getLogger(name, parent=None):
     """ Create a logger with some sane configuration
     Args:
         name (str): name of logger. Should be the name of the file.
-        parent (str): name of parent logger to inherit its properties    
+        parent (str): name of parent logger to inherit its properties
     """
     if parent:
         # create child logger that inherits properties from father

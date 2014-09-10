@@ -17,7 +17,7 @@ def toPostGIS(data, userid):
     """ Export "/data.json" to configured PostGIS database. Assumes an up-to-date data.json.
     Returns: JSON object with status, new tablename, message
     """
-    # If an email is used for userid we need to change `@' and `.' to something valid 
+    # If an email is used for userid we need to change `@' and `.' to something valid
     # for Postgres tables
     tablename = userid.replace('@','_at_').replace('.','_dot_')
     host = config.get("ogr","database_host")
@@ -25,14 +25,14 @@ def toPostGIS(data, userid):
     user = config.get("ogr","database_user")
     password = config.get("ogr","database_password")
 
-    target = TARGET_POSTGIS.format( USER=user, DATABASE=database, HOST=host, PASSWORD=password )   
+    target = TARGET_POSTGIS.format( USER=user, DATABASE=database, HOST=host, PASSWORD=password )
     source = data
-    
+
     call_array = [ OGR2OGR, "-overwrite", "-update", "-f", "PostgreSQL", target, \
-        source, "OGRGeoJSON", "-nln", tablename]        
-    
-    LOG.debug("OGR export: " + `call_array`)    
-    
+        source, "OGRGeoJSON", "-nln", tablename]
+
+    LOG.debug("OGR export: " + `call_array`)
+
     status = subprocess.call( call_array )
     if (status):
         return { "error": status, "msg":"OGR Export failed"}

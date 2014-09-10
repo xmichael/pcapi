@@ -1,7 +1,7 @@
 #FS Provider tries to be "loosely" dropbox compliant to make your life a bit easier especially regarding the Metadata object
 
-# WARNING!!! 
-# No `/' directory will be created unless you upload a file first. This is to avoid 
+# WARNING!!!
+# No `/' directory will be created unless you upload a file first. This is to avoid
 # a mess by clients calling /auth/local repeatedly and creating a new users every time without authentication.
 # Might revisit once we have authentication in place!
 
@@ -14,26 +14,26 @@ from pcapi_exceptions import FsException
 log = logtool.getLogger("FsProvider", "pcapi")
 
 class Metadata(object):
-    """ metadata of files/dir as returned from local filesystem. This is plain filesystem 
+    """ metadata of files/dir as returned from local filesystem. This is plain filesystem
     metadata and NOT high-level pcapi metadata for records or editors"""
-    
+
     def __init__ (self, md):
         self.md = md
 
     def __str__(self):
         return `self.md`
-        
+
     def mtime(self, fmt=None):
         """ Return last modification time of self.
-        Args:        
+        Args:
             fmt (optional): format (s. strftime() system call) for the output date
-        Returns: 
+        Returns:
          a date string in format described in "fmt" as in strftime. If no
         format is specified then seconds since unix epoch are returned. This is useful for date comparisons.
-        
+
         Timezones are ignored (assuming GNT) and invalid mtimes return None
         """
-        
+
         # Dropbox format. Last 5 characters are for timezone
         try:
             tm = time.gmtime(self.md["modified"])
@@ -42,16 +42,16 @@ class Metadata(object):
                 return time.strftime(fmt,tm)
         except ValueError:
             log.exception("ValueError. Should not happen. Could not parse mtime: \n"\
-                                + self.md["modified"][:-6])            
+                                + self.md["modified"][:-6])
             return None
-    
+
     def ls(self):
-        """ Contents of directory (or just the file) """            
+        """ Contents of directory (or just the file) """
         if self.is_dir():
             return [ x["path"] for x in self.md["contents"] ]
         else:
             return self.md["path"]
-    
+
     def lsdirs(self):
         """ list only directories """
         if self.is_dir():
@@ -62,10 +62,10 @@ class Metadata(object):
     def path(self):
         """ return path of file/dir """
         return self.md["path"]
-    
+
     def is_dir(self):
         return True if self.md["is_dir"] == "true" else False
-        
+
 
 class FsProvider(object):
     """
@@ -75,10 +75,10 @@ class FsProvider(object):
     ## STATIC variables
     EMAIL_RE = re.compile(r'[^@ /]+@[^@ ./]+\.[^@ /]+$')
     HEX_RE = re.compile(r'[0-9a-fA-F-]+$')
-    
+
     def __init__(self, userid):
         """ Args:
-                userid (string) : Userid (aka request key) of user. 
+                userid (string) : Userid (aka request key) of user.
                     Only valid emails or hexnums are allowed
         """
         if not ( FsProvider.EMAIL_RE.match(userid) or FsProvider.HEX_RE.match(userid) ):
@@ -86,18 +86,18 @@ class FsProvider(object):
         self.userid = userid
         # Full path pointing to the user's sandbox *directory*
         self.basedir = config.get("path", "data_dir") + "/" + userid
-    
+
     def login(self):
         """ Login -- This is currently dummy as there is no login
-            
+
             Returns:
                 a json repose with state=1 and userid
         """
         return { "state": 1, "userid": self.userid}
-        
+
     def realpath(self, path):
         """ converts chrooted path to real fs path """
-        #warning: don't use os.path.join without testing for `//' in path 
+        #warning: don't use os.path.join without testing for `//' in path
         return self.basedir + self._addslash(path)
 
     def _addslash(self, path):
@@ -108,14 +108,14 @@ class FsProvider(object):
         return path
 
     def put_file(self, path, fp, overwrite):
-        """ Save file handler fp contents at path 
+        """ Save file handler fp contents at path
         Args:
             path (str) : chroot based path including filename
             fp (File) : file pointer pointing to data
             overwrite (bool): overwrite the file if it exists
 
         Returns:
-            string: chrooted path that was actually used. This may be different than the 
+            string: chrooted path that was actually used. This may be different than the
                     original in case of existing file, illegal chars etc.
 
         Raises:
@@ -131,7 +131,7 @@ class FsProvider(object):
         path = self._addslash(path)
         #ban special characters after last `/'
         dirname = helper.strfilter( path[:path.rfind("/")] ,"\\.~" )
-        filename = helper.strfilter( path[path.rfind("/"):], "~/" )                
+        filename = helper.strfilter( path[path.rfind("/"):], "~/" )
         #create dir if it doesn't exist
         realdir = self.realpath(dirname)
         realfile = os.path.join(realdir, filename)
@@ -144,12 +144,12 @@ class FsProvider(object):
                 return path #do nothing
         log.debug("writing file: %s/%s" % (realdir, filename))
         with open ( realdir + "/" + filename , "w" ) as f:
-            f.write(fp.read())        
+            f.write(fp.read())
         return path
 
     def mkdir(self, path):
-        """ Wrapper call around create_folder. Returns metadata. 
-        If folder already exists we have to implement to "new file name" algorithm.        
+        """ Wrapper call around create_folder. Returns metadata.
+        If folder already exists we have to implement to "new file name" algorithm.
         """
         path = self._addslash(path)
         #ban special characters for dirname
@@ -161,7 +161,7 @@ class FsProvider(object):
             os.makedirs(realdir, 0770)
             return self.metadata(path)
         else:
-            # File already exists. Find the next filename (XXX) available 
+            # File already exists. Find the next filename (XXX) available
             # by calling this function recursively. (Can be much faster
             # by first checking the results of ls before doing the recursion)
             numlist = re.findall(".* \(([0-9]*)\)$",path)
@@ -176,18 +176,18 @@ class FsProvider(object):
     def ls(self,path):
         """ List contents of chrooted path """
         return self._addslash( os.listdir(self.realpath(path)))
-    
+
     def upload(self,name, fp, overwrite=False):
         """ Upload the media file stream fp
         Args:
-            name (str): destination path of file in sandbox with directories 
+            name (str): destination path of file in sandbox with directories
                         created on-the-fly e.g. "/foo.jpg" for apps/pcapi/foo.jpg
             fp (File): the file object to upload.
             overwrite (bool): whether to overwrite the file or save under a new name
-        
+
         Returns: Dictionary of Metadata of uploaded file.
                  similar to https://www.dropbox.com/developers/reference/api#metadata-details
-        
+
         Raises:
             FsException
         """
@@ -198,26 +198,26 @@ class FsProvider(object):
         except Exception as e:
             log.debug(str(e))
         return self.metadata(new_path)
-            
+
     def metadata(self,path):
         """ Provides dropbox API-compatible interface for filesystem metadata.
-        It reads all informations it cans about <path> and return a Metadata 
+        It reads all informations it cans about <path> and return a Metadata
         object.
-        
+
         Args:
             path (string): A chroot-relative path of file or directory (e.g. `/')
-        
+
         Returns:
             Metadata: an object with filesystem metadata about path
-            
+
         s.a. https://www.dropbox.com/developers/core/docs#metadata for
         documentation of drobpox's "conventions" which we loosely follow
-        
+
         NOTE: again this is only loosly compatible with dropbox so  compatibility
         issues with AbstractWhataverProvider abstractions could arise.
         """
         path = self._addslash(path)
- 
+
         realpath = self.realpath(path)
         md = {}
         if( not os.path.isdir(realpath) ):
@@ -227,7 +227,7 @@ class FsProvider(object):
             md["modified"] = os.path.getmtime(realpath) #in epoch seconds
             md["bytes"] = os.path.getsize(realpath)
         else:
-            #It is a directory. 
+            #It is a directory.
             # List files but DON'T just recurse because we only want depth level 1.
             md["path"] = path
             md["is_dir"] = "true"
@@ -249,10 +249,10 @@ class FsProvider(object):
                     })
             md["contents"] = contents
         return Metadata(md)
-        
+
     def get_file_and_metadata(self, from_path, rev=None):
         """ Added for dropbox-API compatibility
-        
+
         Returns:
             Tuple containing HttpResponse as well as parsed metadata as a dict.
             (s. https://www.dropbox.com/developers/core/docs#metadata)
@@ -260,20 +260,20 @@ class FsProvider(object):
         f = open (self.realpath(from_path))
         m = self.metadata(from_path)
         return f,m
- 
+
     def exists(self, path):
         """ Check if path exists """
         return True if os.path.exists(self.realpath(path)) else False
-   
+
     def sync(self, cursor=None):
         """ Converts returns files that were created or modified from specified time/cursor
-        
+
         Args:
             cursor(int): UNIX epoch in seconds
-        
+
         returns:
             List of updated/created files in json format { "updated" = [file1,file2,...] }
-        
+
         NOTE: Unlike dropbox sync, this call will NOT include deleted files!
         """
         #curent time as unix epoch
@@ -288,17 +288,17 @@ class FsProvider(object):
             cur_time = int(cursor)
         except ValueError:
             return { "error" : 1, "msg": "Invalid cursor. Must be a positive integer"}
-        for root,dirs,files in os.walk( self.realpath('/') ):  
+        for root,dirs,files in os.walk( self.realpath('/') ):
             for f in files:
                 fpath=os.path.join(root,f)
-                mtime=os.stat(fpath).st_mtime    
+                mtime=os.stat(fpath).st_mtime
                 if cur_time < mtime:
                     #fpath is full fs path, real_fname is relative to chroot
                     rel_fname = fpath[len(self.basedir):]
                     updated.append(rel_fname)
         return { "updated": updated, "deleted": deleted }
 
-        
+
     def file_delete(self,path):
         """ Delete file and return parsed metadata"""
         m = self.metadata(path)
@@ -312,13 +312,13 @@ class FsProvider(object):
 if __name__ == "__main__":
     userid = "testuser"
     fp = FsProvider(userid)
-    #list metadata   
+    #list metadata
     fp.metadata("/")
     # upload
     uploadData = open ( config.get("test","textfile") )
     print "put_file -> " + fp.put_file("/Myfile.test" , uploadData)
     #### now list directory ##
     print "================================"
-    print "ls -> " + `fp.ls("/")`    
+    print "ls -> " + `fp.ls("/")`
     #### now delete the file ##
     print "================================"

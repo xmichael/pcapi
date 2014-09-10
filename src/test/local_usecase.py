@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Local provider use-case for FTGB tests. This is not coverage-test but use-case 
+Local provider use-case for FTGB tests. This is not coverage-test but use-case
 testing -- Authoring tool / ftgb use case used for demonstrating fieldtrip-open
 
 Local provider has no oauth implementation yet. User will just need to:
 1. Use an e-mail address as USERID. Whoever has the user's email has access.
-2. PUT/POST before "reading" anything. No user directory is created unless 
+2. PUT/POST before "reading" anything. No user directory is created unless
    something is uploaded.
 """
 import os, sys, unittest
@@ -45,7 +45,7 @@ class TestAuthoringTool(unittest.TestCase):
 
     Get one editor:
         /editors/local/testemail@domain.com/cobweb.edtr
-        
+
     Get one image:
         /records/local/testemail@domain.com/testtt/1385980310970.jpg
 
@@ -59,7 +59,7 @@ class TestAuthoringTool(unittest.TestCase):
         /sync/local/testemail@domain.com
 
         /sync/local/testemail@domain.com/123456789
-    
+
     Post mbtiles (POST):
         /tiles/local/testemail@domain.com/dyfi.mbtiles
     """
@@ -101,7 +101,7 @@ class TestAuthoringTool(unittest.TestCase):
         #cleanup EVERYTHING under /records/
         url = '/records/{0}/{1}//'.format(provider,userid)
         app.delete(url).json
-        
+
         # create myrecord/record.json
         url = '/records/{0}/{1}/myrecord'.format(provider,userid)
         resp = app.post(url, upload_files=[("file" , textfilepath )] ).json

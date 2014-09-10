@@ -171,7 +171,7 @@ class TestDropboxRecords(unittest.TestCase):
         resp = app.put('/records/dropbox/%s/myrecord/image.jpg' % userid, params=localfile.read() ).json
         self.assertEquals(resp["error"], 0)
         self.assertEquals(resp["path"], "/records/myrecord/image.jpg")
-    
+
     def test_put_folder(self):
         """ Move record """
         app.delete('/records/dropbox/%s//' % userid)
@@ -180,7 +180,7 @@ class TestDropboxRecords(unittest.TestCase):
         # put first file at /lev1/lev2
         resp = app.put('/records/dropbox/%s/myrecord' % userid, params = 'myrecord1').json
         self.assertEquals(resp["error"], 0 )
-        
+
         resp = app.post('/records/dropbox/%s/myrecord' % userid, upload_files=[("file" , textfilepath )] ).json
         resp = app.post('/records/dropbox/%s/myrecord/image.jpg' % userid, upload_files=[("file" , textfilepath )] ).json
         # put first file at /lev1/lev2
@@ -287,9 +287,9 @@ class TestDropboxRecords(unittest.TestCase):
         # Get all file since editor id
         resp = app.get('/records/dropbox/%s/' % userid, params={ "filter":"editor","id": eid}).json
         self.assertEquals(resp["error"], 0)
-    
+
     def test_resize_image(self):
-        
+
         app.delete('/records/dropbox/%s/myrecord' % userid)
         resp = app.post('/records/dropbox/%s/myrecord' % userid, upload_files=[("file" , textfilepath )] ).json
         self.assertEquals(resp["error"], 0)
@@ -299,13 +299,13 @@ class TestDropboxRecords(unittest.TestCase):
         from wand.image import Image
         with Image(blob=resp.body) as img:
             self.assertEquals(img.width, 480)
-        
+
         #check for original image size
         resp = app.get('/records/dropbox/%s/myrecord/myimage_orig.jpg' % userid )
         from wand.image import Image
         with Image(blob=resp.body) as img:
             self.assertEquals(img.width, 640)
-    
+
     def test_filter_by_mediatype(self):
         app.delete('/records/dropbox/%s/myrecord' % userid)
         resp = app.post('/records/dropbox/%s/myrecord' % userid, upload_files=[("file" , textfilepath )] ).json
@@ -471,10 +471,10 @@ class TestEditor(unittest.TestCase):
     def setUp(self):
         self.f = open ( editorfilepath , "r")
         self.editor = Editor(self.f.read())
-    
+
     def tearDown(self):
         self.f.close()
-    
+
     def test_editor_elements(self):
         result = [[u'fieldcontain-text-1', u'Title'], [u'fieldcontain-range-1', u'Range'], [u'fieldcontain-textarea-1', u'Description'], [u'fieldcontain-checkbox-1', u'Choose'], [u'fieldcontain-radio-1', u'Choose'], [u'fieldcontain-select-1', u'Choose'], [u'fieldcontain-image-1', 'image'], [u'fieldcontain-audio-1', 'audio']]
         self.assertEquals(result, self.editor.findElements())
@@ -483,21 +483,21 @@ class TestDropboxProvider(unittest.TestCase):
     """
     testing dropbox provider
     """
-    
-    
+
+
     def setUp(self):
         self.dbox = dbox_provider.DropboxProvider()
         self.dbox.login(userid)
         self.threads = 10
         self.i=0
-    
+
     def test_mkdir(self):
         app.delete('/records/dropbox/%s//' % userid)
         records = []
         for i  in xrange(self.threads):
             records.append("rec")
         print len(records)
-        
+
         requests = threadpool.makeRequests(self.make_dirs, records, self.result, self.handle_exception)
         #insert the requests into the threadpool
         pool = threadpool.ThreadPool(100)
@@ -507,7 +507,7 @@ class TestDropboxProvider(unittest.TestCase):
             print i
             pool.putRequest(req)
             print "Work request #%s added." % req.requestID
-    
+
         #wait for them to finish (or you could go and do something else)
         pool.wait()
         pool.dismissWorkers(100, do_join=True)
@@ -518,17 +518,17 @@ class TestDropboxProvider(unittest.TestCase):
             if el["is_dir"]:
                 j = j+1
         self.assertEquals(self.threads, j)
-    
+
     def make_dirs(self, rec):
         self.dbox.mkdir("records/"+rec)
         #self.dbox.api_client.file_create_folder(rec)
         #put_resp = app.post('/records/dropbox/%s/%s' % (userid, rec), params=localfile.read()).json
-        
+
     def result(self, request, result):
         print "result is %s" % result
         if result is None:
             self.i = self.i+1
-    
+
     def handle_exception(self, request, exc_info):
         if not isinstance(exc_info, tuple):
             # Something is seriously wrong...
@@ -537,15 +537,15 @@ class TestDropboxProvider(unittest.TestCase):
             raise SystemExit
         print "**** Exception occured in request #%s: %s" % \
           (request.requestID, exc_info)
-    
+
     def test_search(self):
         app.delete('/records/dropbox/%s//' % userid)
         resp = app.post('/records/dropbox/%s/myrecord' % userid, upload_files=[("file" , textfilepath )] ).json
         resp = app.post('/records/dropbox/%s/myrecord/image.jpg' % userid, upload_files=[("file" , textfilepath )] ).json
         metadata = self.dbox.search("/records/", ".jpg")
         self.assertEquals(len(metadata.md), 1)
-        
-    
+
+
     def tearDown(self):
         print self.i
 

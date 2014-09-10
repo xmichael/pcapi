@@ -14,7 +14,7 @@ class Editor(object):
         self.content = content
         self.soup = BeautifulSoup(self.content, 'html.parser')
         self.elements = ["text", "textarea", "checkbox", "radio", "select", "image", "audio", "range"]
-    
+
     def findElements(self):
         elements = []
         for tag in self.soup.findAll("div", {"class": "fieldcontain"}):
@@ -23,13 +23,13 @@ class Editor(object):
                 log.debug("%s, %s" % (tag["id"], self.get_header(elem, tag["id"])))
                 elements.append([tag["id"], self.get_header(elem, tag["id"])])
         return elements
-    
+
     def checkForElements(self, tag):
         for el in self.elements:
             if el in tag and "-buttons" not in tag:
                 return (True, el)
         return (False, None)
-    
+
     def get_header(self, el_type, el_id):
         cases = {"text": "label", "textarea": "label", "range": "label", "radio": "legend", "checkbox": "legend", "select": "legend", "image": None, "audio": None}
         for tag in self.soup.findAll("div", {"id": el_id}):
@@ -46,13 +46,13 @@ class Editor(object):
 
 
 class FormValidator:
-    
+
     def __init__(self, content):
         log.debug("initialize form validator")
         self.content = content
         self.soup = BeautifulSoup(self.content, 'html.parser')
         self.valid_tags = ['html', 'body', 'form', 'div', 'input', 'textarea', 'select', 'option', 'button', 'legend', 'label', 'fieldset']
-    
+
     def validate(self):
         log.debug("start validating")
         if self.clean_it() and self.check_tags():
@@ -60,7 +60,7 @@ class FormValidator:
             return self.validate_html5()
         else:
             return False
-    
+
     def clean_it(self):
         for string in self.content.split('\n'):
             if "javascript:" in string:
@@ -72,7 +72,7 @@ class FormValidator:
         #cleaner = Cleaner(style=True, links=False, javascript=True, remove_unknown_tags=False, forms=False)
         #log.debug(cleaner.clean_html(self.content))
         return True
-    
+
     def validate_html5(self):
         log.debug("validate_html5")
         p = html5lib.HTMLParser(tree=treebuilders.getTreeBuilder("dom"))
@@ -87,10 +87,10 @@ class FormValidator:
         stream = walker(dom_tree)
         s = serializer.htmlserializer.HTMLSerializer(omit_optional_tags=False)
         output_generator = s.serialize(stream)
-        
+
         for item in output_generator:
             print item"""
-    
+
     """def validate_schema(self):
         f = open(config.get("path","schemafile"), "r")
         xmlschema_doc = etree.parse(StringIO(f.read()))
@@ -98,7 +98,7 @@ class FormValidator:
         schema = etree.XMLSchema(xmlschema_doc)
         doc = etree.parse(StringIO(self.content))
         return schema.validate(doc)"""
-    
+
     def check_tags(self):
         log.debug("checking tags")
         for tag in self.soup.findAll(True):
@@ -109,14 +109,14 @@ class FormValidator:
                 if self.check_attr(tag) == False:
                     return False
         return True
-    
+
     def check_attr(self, tag):
         #log.debug("check attr")
         if tag.name == 'form':
             #log.debug(tag.attrs)
             if 'action' in tag.attrs:
                 return False
-        
+
         valid_input_type = ['text', 'checkbox', 'radio', 'submit', 'button', 'range', 'file']
         if tag.name == 'input':
             if tag.get('type') not in valid_input_type:

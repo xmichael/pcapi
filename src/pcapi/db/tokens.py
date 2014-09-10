@@ -2,7 +2,7 @@
 
 import spatialite, logtool
 
-#################### Dropbox,flickr etc. credential storage management #############        
+#################### Dropbox,flickr etc. credential storage management #############
 """  Wrapper functions around SQL command use for reading/writing/seaching access
 credentials for different providers.
 
@@ -55,11 +55,10 @@ def save_unverified_request( userid, req_secret ):
         INSERT OR IGNORE INTO temp_request(userid,reqsec) VALUES (?,?)
         """, (userid,req_secret))
     return res==[]
-    
+
 def prune_temp_request():
     """ delete temporary requests tables. Should be called at app startup """
     res = spatialite.execute("""
         DELETE FROM temp_request(userid,reqsec) VALUES
         """)
     return res==[]
-    

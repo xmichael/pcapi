@@ -27,7 +27,7 @@ import pcapi_routes, config, bottle
 ##################################################
 #################### MAIN ########################
 ##################################################
-# check if "debug" is true 
+# check if "debug" is true
 debug = True if config.get("server","debug")=="true" else False
 bottle.debug(debug)
 application = bottle.default_app()

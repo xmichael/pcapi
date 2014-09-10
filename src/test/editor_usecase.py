@@ -23,7 +23,7 @@ class TestWSGI(unittest.TestCase):
         self.app = TestApp(pcapi.application)
         # dummy file
         self.localimg = "./foo.txt"
-        
+
     @unittest.skip("skipping Dropbox Synchronous test")
     def test_dropbox_login_noasync(self):
         # load a file and get a dropbox cookie
@@ -39,7 +39,7 @@ class TestWSGI(unittest.TestCase):
         resp = self.app.get('/auth/dropbox/%s' % userid).json
         print "resp was " + `resp`
         self.assertEquals( resp["state"], 1)
-       
+
     #@unittest.skip("skipping Dropbox Asynchronous test")
     def test_dropbox_login_async(self):
         """ This test only works with normal http request, not app.get(url)
@@ -52,7 +52,7 @@ class TestWSGI(unittest.TestCase):
         userid = resp.json["userid"]
         print "Click on the url below:"
         print "url is : " + url
-        # 
+        #
         # poll for N seconds
         N=30
         for i in xrange(N):
@@ -63,9 +63,9 @@ class TestWSGI(unittest.TestCase):
                 print "LOGGED IN by polling"
                 break
             time.sleep(1)
-            
+
         self.assertEquals( resp["state"], 1)
-        
+
 if __name__ == '__main__':
     unittest.main()
 

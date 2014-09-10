@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Export to an OGR compatible datasource. Currently only PostGIS is supported with the 
+Export to an OGR compatible datasource. Currently only PostGIS is supported with the
 intent to extend this to other formats (e.g. GeoPackage)
 
 Test Process:
@@ -33,7 +33,7 @@ provider = 'local'
 class TestDatabaseExport(unittest.TestCase):
     """
     1) POST all test records
-    
+
     2) EXPORT to postgis
         /records/local/USER/?filter=database&ftl
     """
@@ -42,10 +42,10 @@ class TestDatabaseExport(unittest.TestCase):
     def test_post_records(self):
         """ PREPARATION: posts <records_num> records to use as test data """
         #cleanup previous cruft under /records/
-        # -- not necessary since we are overwriting the records        
+        # -- not necessary since we are overwriting the records
         url = '/records/{0}/{1}//'.format(provider,userid)
         app.delete(url)
-        
+
         # POST records_num records from the envsys dataset
         for i in xrange (records_num):
             record_file = os.path.join(envsys_records_dir, "record%s.json" % str(i)) #full path
@@ -61,11 +61,11 @@ class TestDatabaseExport(unittest.TestCase):
 
 
     def test_export_to_database(self):
-        """ 
-        Export all records to a database named after the userid/uuid probably with 
+        """
+        Export all records to a database named after the userid/uuid probably with
         some character mangling.
         """
-        
+
         #export to database
         url = '/records/{0}/{1}/?filter=format&frmt=database'.format(provider,userid)
         resp = app.get(url)

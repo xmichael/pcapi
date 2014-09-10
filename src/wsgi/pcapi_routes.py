@@ -22,9 +22,9 @@ from pcapi_rest import PCAPIRest
 
 @route('/auth/providers',method=["GET"])
 def capabilities():
-    return PCAPIRest(request,response).capabilities()    
+    return PCAPIRest(request,response).capabilities()
 
-### /export/ a  public URL 
+### /export/ a  public URL
 @route('/export/<provider>/<userid>/<path:path>', method=["GET"])
 def export(userid, provider, path="/"):
     return PCAPIRest(request,response).export(provider, userid, path)
@@ -87,10 +87,10 @@ def login(provider,userid=None):
 def init_static_routes():
     """ Call this function to setup static routes using the documentroot defined in config.ini """
     root = config.getStaticHTML()
-    @route('/<filename:re:(?!ws/).*>')    
+    @route('/<filename:re:(?!ws/).*>')
     def serve_static(filename):
         return static_file(filename, root=root, download=False)
-    
+
     @route('/')
     def default_static():
         return static_file('index.html', root=root, download=False)
