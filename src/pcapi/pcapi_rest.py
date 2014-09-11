@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import re
 import simplekml
 import sys
 import tempfile
