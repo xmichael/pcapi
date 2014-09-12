@@ -12,7 +12,7 @@ import shutil
 import re
 from pcapi import logtool, config, helper
 
-from pcapi.pcapi_exceptions import FsException
+from pcapi.exceptions import FsException
 
 log = logtool.getLogger("FsProvider", "pcapi")
 

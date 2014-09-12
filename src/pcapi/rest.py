@@ -23,7 +23,7 @@ except ImportError:
 from pcapi import ogr, dbox_provider, fs_provider, logtool
 from pcapi.form_validator import FormValidator, Editor
 from pcapi.cobweb_parser import COBWEBFormParser
-from pcapi.pcapi_exceptions import DBException, FsException
+from pcapi.exceptions import DBException, FsException
 
 log = logtool.getLogger("PCAPIRest", "pcapi")
 #global number of threads
