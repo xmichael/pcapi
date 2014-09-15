@@ -5,8 +5,11 @@ setup(
     version="0.4",
     packages=find_packages('src'),
     package_dir={'': 'src'},
+    include_package_data=True,
 
-    data_files=[('resources', ['src/resources/pcapi.ini.example'])],
+    package_data={
+        'pcapi': ['data/*'],
+    },
 
     install_requires=['Wand==0.3.8',
                       'beautifulsoup4==4.1.3',
@@ -24,7 +27,7 @@ setup(
         # Use custom pysqlite with the LOAD_EXTENSION enabled
         'https://github.com/edina/pysqlite/archive/2.6.3.tar.gz#egg=pysqlite-2.6.3'
     ],
-
+    zip_safe=True,
     entry_points={
         'console_scripts': [
             'pcapi-admin = pcapi.utils.admin:parse_commandline'
