@@ -2,7 +2,7 @@ import argparse
 import os
 import shutil
 
-from pcapi import get_resource
+from pkg_resources import resource_filename
 
 
 def create_skeleton(path):
@@ -10,7 +10,7 @@ def create_skeleton(path):
         print 'Directory already exist'
         return False
 
-    config_file = get_resource('pcapi.ini.example')
+    config_file = resource_filename('pcapi', 'data/pcapi.ini.example')
 
     # create the folder structure
     os.makedirs(os.path.join(path, 'data'))
