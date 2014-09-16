@@ -18,9 +18,8 @@ except ImportError:
 # Also libraries to the python path
 pwd = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(pwd, '../'))  # to find the classes to test
-sys.path.append(os.path.join(pwd, '../wsgi'))
 
-import pcapi_devel
+from pcapi.server import application
 from pcapi import config, dbox_provider
 from pcapi.form_validator import FormValidator, Editor
 
@@ -47,7 +46,7 @@ localfile = open ( textfilepath , "r")
 #schemafile = open ( schemafilepath , "r")
 
 # Application
-app = TestApp(pcapi_devel.application)
+app = TestApp(application)
 
 def _verify_token():
     """

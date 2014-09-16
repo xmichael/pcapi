@@ -17,9 +17,8 @@ from webtest import TestApp
 ## Also libraries to the python path
 pwd = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(pwd, '../'))  # to find the classes to test
-sys.path.append(os.path.join(pwd, '../wsgi'))
 
-import pcapi_devel
+from pcapi.server import application
 from pcapi import config
 
 userid = "testexport@domain.co.uk"
@@ -30,7 +29,7 @@ envsys_records_dir = config.get("test", "records_dir")
 records_num = 15
 
 # Application
-app = TestApp(pcapi_devel.application)
+app = TestApp(application)
 provider = 'local'
 
 class TestDatabaseExport(unittest.TestCase):

@@ -11,9 +11,8 @@ import unittest
 # Also libraries to the python path
 pwd = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(pwd, '../'))  # to find the classes to test
-sys.path.append(os.path.join(pwd, '../wsgi'))
 
-import pcapi_devel
+from pcapi.server import application
 from webtest import TestApp
 import time
 
@@ -21,7 +20,7 @@ import time
 class TestWSGI(unittest.TestCase):
 
     def setUp(self):
-        self.app = TestApp(pcapi_devel.application)
+        self.app = TestApp(application)
         # dummy file
         self.localimg = "./foo.txt"
 

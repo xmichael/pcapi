@@ -17,9 +17,8 @@ from webtest import TestApp
 ## Also libraries to the python path
 pwd = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(pwd, '../'))  # to find the classes to test
-sys.path.append(os.path.join(pwd, '../wsgi'))
 
-import pcapi_devel
+from pcapi.server import application
 from pcapi import config
 
 userid = "testemail@domain.co.uk"
@@ -31,7 +30,7 @@ editorfilepath = config.get("test", "editorfile")
 localfile = open ( textfilepath , "r")
 
 # Application
-app = TestApp(pcapi_devel.application)
+app = TestApp(application)
 provider = 'local'
 
 class TestAuthoringTool(unittest.TestCase):
