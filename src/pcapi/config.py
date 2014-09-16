@@ -28,18 +28,12 @@ def getCCMap():
     }
     return ccmap
 
-pc_api_dir = os.getcwd()
-config.add_section('path')
-config.set('path', 'pcapi', pc_api_dir)
-config.add_section('test')
-config.set('test', 'test_dir', os.sep.join((pc_api_dir, 'pcapi', 'test')))
-
 home = os.path.expanduser("~")
 
 # init config
 config_paths = []
 config_paths.append(os.path.join(home, '.config', 'pcapi', 'pcapi.ini'))
-config_paths.append(os.path.join(pc_api_dir, 'pcapi.ini'))
+config_paths.append(os.path.join('.', 'pcapi.ini'))
 
 # combine the config files
 found_paths = config.read(config_paths)
