@@ -58,6 +58,7 @@ def save_unverified_request( userid, req_secret ):
 
 
 def delete_unverified_request(userid):
+    """ Delete an user temporary request returns always True """
     res = spatialite.execute("""
         DELETE FROM temp_request WHERE userid=?
         """, (userid,))
