@@ -36,7 +36,7 @@ def authdec():
                 status = dbox.login(args[1])
                 # check access token validity
                 if ( status["state"] != dbox_provider.STATE_CODES["connected"] ):
-                    return { "error": 1 , "msg": "Bad access token. Relogin!"}            
+                    return { "error": 1 , "msg": "Bad access token. Relogin!"}
             try:
                 wrapper.__doc__ = f.__doc__
                 kwargs["dbox"] = dbox
@@ -48,7 +48,7 @@ def authdec():
 
 class PCAPIRest(object):
     """ REST part of the API. Return values should be direct json """
-    
+
     def __init__(self, request, response):
         self.request = request
         self.response = response
@@ -61,12 +61,12 @@ class PCAPIRest(object):
           "dropbox" : ["oauth", "search", "synchronize", "delete"], \
           "local" : ["search", "synchronize", "delete"] \
         }
-        
+
     def auth(self, provider, userid):
         """ Resume session using a *known* userid:
-            - If successful, initialiaze PCAPI provider object at "self.provider" and return None 
-            - otherwise return json response describing error 
-            
+            - If successful, initialiaze PCAPI provider object at "self.provider" and return None
+            - otherwise return json response describing error
+
             Arguments:
                 provider (string): provider to use
                 userid (string): user id to resume
@@ -97,31 +97,31 @@ class PCAPIRest(object):
         else:
             return { "error" : 1, "msg" : "provider %s not supported!" % `provider` }
         return None # Success!
-        
-    
+
+
     def create_records_cache(self,path):
-        """ Creates an array of Records classed (s.a.) after parsing all records under `path'. 
+        """ Creates an array of Records classed (s.a.) after parsing all records under `path'.
         Assumes a valid session """
         records = []
-        
+
         # If we are in `/' then get all records
         for d in self.provider.metadata(path).lsdirs():
             recpath = d + "/record.json"
             log.debug(recpath)
             records.append(recpath)
         requests = threadpool.makeRequests(self.records_worker, records, self.append_records_cache, self.handle_exception)
-        
+
         #insert the requests into the threadpool
         pool = threadpool.ThreadPool(min(len(requests), 20))
         for req in requests:
             pool.putRequest(req)
             log.debug("Work request #%s added." % req.requestID)
-    
+
         #wait for them to finish (or you could go and do something else)
         pool.wait()
         pool.dismissWorkers(min(len(requests), 20), do_join=True)
         log.debug("workers length: %s" % len(pool.workers))
-    
+
     def records_worker(self, recpath):
         log.debug("Parsing records -- requesting " + recpath)
         folder = re.split("/+", recpath)[2]
@@ -139,12 +139,12 @@ class PCAPIRest(object):
         buf.close()
         #return Record(rec, meta)
         return Record(record, meta)
-    
+
     def append_records_cache(self, request, result):
         log.debug("result is %s" % result)
         if result is not None:
             self.rec_cache.append(result)
-    
+
     def handle_exception(self, request, exc_info):
         if not isinstance(exc_info, tuple):
             # Something is seriously wrong...
@@ -154,7 +154,7 @@ class PCAPIRest(object):
         log.debug( "**** Exception occured in request #%s: %s" % \
           (request.requestID, exc_info))
 
-    
+
     def check_init_folders(self, path):
         log.debug("check %s" % path)
         if path == "editors/" or path == "records/":
@@ -162,17 +162,17 @@ class PCAPIRest(object):
             self.provider.mkdir(path)
             return True
         return False
-    
+
     def assets(self, provider, userid, path, flt):
         """
-            Update/Overwrite/Create/Delete/Download records. 
-            
+            Update/Overwrite/Create/Delete/Download records.
+
         """
         log.debug('records( %s, %s, %s, %s)' % (provider, userid, path, str(flt)) )
         error = self.auth(provider,userid)
         if (error):
             return error
-        
+
         if self.request.method == "GET":
             self.create_records_cache("records/")
             records_cache = self.filter_data("media", path, userid)
@@ -185,7 +185,7 @@ class PCAPIRest(object):
                     f = open(records_cache, "r")
                     try:
                         # Read the entire contents of a file at once.
-                        response_data = f.read() 
+                        response_data = f.read()
                     finally:
                         f.close()
                 except IOError:
@@ -193,12 +193,12 @@ class PCAPIRest(object):
                 return response_data
             bulk = [ r.content for r in records_cache ]
             return {"records": bulk, "error": 0 }
-        
-    
+
+
     def records(self, provider, userid, path, flt):
         """
-            Update/Overwrite/Create/Delete/Download records. 
-            
+            Update/Overwrite/Create/Delete/Download records.
+
         """
         log.debug('records( %s, %s, %s, %s)' % (provider, userid, path, str(flt)) )
         error = self.auth(provider,userid)
@@ -239,7 +239,7 @@ class PCAPIRest(object):
                     # check path is different and add a callback to update the record's name
                     if ( md.path() != path ):
                         newname = md.path()[md.path().rfind("/") + 1:]
-                        def proc(fp): 
+                        def proc(fp):
                             j = json.loads(fp.read())
                             j["name"]=newname
                             log.debug("Name collision. Renamed record to: " + newname)
@@ -277,12 +277,12 @@ class PCAPIRest(object):
                 # normal /fs/ for all METHODS
                 return self.fs(provider,userid,path)
             else:
-                # allowed only : // , /dir1, /dir1/fname   but NOT /dir1/dir2/dir2 
+                # allowed only : // , /dir1, /dir1/fname   but NOT /dir1/dir2/dir2
                 return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
         except Exception as e:
                 log.exception("Exception: " + str(e))
                 return {"error":1 , "msg": str(e)}
-        
+
     def editors(self, provider, userid, path, flt):
         error = self.auth(provider,userid)
         if (error):
@@ -296,7 +296,7 @@ class PCAPIRest(object):
         if re.findall("/editors//?[^/]*$",path):
             return self.fs(provider,userid,path,frmt=flt)
         return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
-    
+
     def tiles(self, provider, userid, path):
         error = self.auth(provider, userid)
         if (error):
@@ -314,10 +314,10 @@ class PCAPIRest(object):
                 provider: e.g. dropbox
                 userid: a registered userid
                 path: path to a filename (for creating/uploading/querying etc.)
-                process (optional) : callback function to process the uploaded 
+                process (optional) : callback function to process the uploaded
                     file descriptor and return a new file descriptor. This is
                     used when extra content specific processing is required e.g.
-                    when record contents should be updated if there is a name 
+                    when record contents should be updated if there is a name
                     conflict.
         """
         log.debug('fs( %s, %s, %s, %s, %s)' % (provider, userid, path, process, frmt) )
@@ -326,12 +326,12 @@ class PCAPIRest(object):
         error = self.auth(provider, userid) #initializes self.provider
         if (error):
             return error
-                
+
         method = self.request.method
 
         log.debug("Received %s request for userid : %s" % (method,userid));
         try:
-            
+
             ######## GET url is a directory -> List Directories ########
             if method=="GET":
                 md = self.provider.metadata(path)
@@ -355,7 +355,7 @@ class PCAPIRest(object):
                                 self.response[name] = value
                                 headers[name] = value
                         log.debug(headers)
-                        if not "editors" in path: 
+                        if not "editors" in path:
                             log.debug("not editors")
                             if "image-" in body or "audio-" in body:
                                 log.debug("asset in record")
@@ -448,8 +448,8 @@ class PCAPIRest(object):
             log.exception("Exception: " + str(e))
             res =  {"error":1 , "msg": str(e)}
         return res
-    
-    
+
+
     def sync(self, provider, userid, cursor):
         log.debug('sync( %s, %s, %s)' % (userid,provider,`cursor`))
         error = self.auth(provider, userid)
@@ -483,7 +483,7 @@ class PCAPIRest(object):
             provider = fs_provider.FsProvider(userid)
             res = provider.login()
             log.debug("fs_provider login response: ")
-            log.debug( logtool.pp(res))            
+            log.debug( logtool.pp(res))
         elif ( provider == "dropbox"):
             dbox = dbox_provider.DropboxProvider()
             if (userid):
@@ -503,14 +503,14 @@ class PCAPIRest(object):
                     log.debug("Callback WORKED!: " + msg)
                     return "Logged in! Feel free to close your browser."
                 except DBException as e:
-                    return {"error":1 , "msg": str(e)}            
+                    return {"error":1 , "msg": str(e)}
             res = dbox.login(req_key=None, callback=callback)
             log.debug("dropbox_login response: ")
             log.debug( logtool.pp(res))
         else:
-            res = { "error": 1 , "msg": "Wrong or unsupported arguments" } 
+            res = { "error": 1 , "msg": "Wrong or unsupported arguments" }
         return res
-        
+
     def convertToKML(self, records, userid):
         """
         function for converting from json to kml
@@ -529,9 +529,9 @@ class PCAPIRest(object):
                         description += "%s: %s\n" % (str(f["label"]), str(f["val"]))
                 log.debug(description)
                 pnt = kml.newpoint(name=record["name"], description=description, coords=[(record["point"]["lon"], record["point"]["lat"])])
-        
+
         return kml.kml()
-    
+
     def convertToGeoJSON(self, records, userid):
         """
         function for converting from json to geojson
@@ -546,9 +546,9 @@ class PCAPIRest(object):
                 feat["geometry"] = {"type": "Point", "coordinates": [record["point"]["lon"], record["point"]["lat"]]}
                 feat["properties"] = {"fields": record["fields"], "editor": record["editor"], "name": record["name"], "timestamp": record["timestamp"]}
                 features.append(feat)
-        
+
         return json.dumps({"type": "FeatureCollection", "features": features})
-    
+
     def convertToCSV(self, records, userid):
         """
         function for converting from json to csv
@@ -600,7 +600,7 @@ class PCAPIRest(object):
                 j=0
                 for f in record["fields"]:
                     #check if the length of the headers is different than the length of the record fields. That means
-                    #that we need to add blank fields on the csv. 
+                    #that we need to add blank fields on the csv.
                     if len(record["fields"]) != len(field_headers):
                         if str(f["id"]) != field_headers[j+1][0]:
                             fields.append("")
@@ -615,7 +615,7 @@ class PCAPIRest(object):
                     j=j+1
                 if i == 0:
                     csv_file.writerow(headers)
-                    
+
                 csv_file.writerow(fields)
                 editor = record["editor"]
                 i = i+1
@@ -625,7 +625,7 @@ class PCAPIRest(object):
         f.close()
         os.remove(temp.name)
         return d
-    
+
     def resizeImage(self, fp, path):
         """ method for resizing images. I decided to keep 480px as absolute size for the images to be resized"""
         with Image(blob=fp) as img:
@@ -633,7 +633,7 @@ class PCAPIRest(object):
             img.resize(480, img.height*480/img.width)
             #upload the resized image
             self.provider.upload(path, StringIO(img.make_blob()) )
-    
+
     def createThumb(self, fp, path):
         """ method for resizing images. I decided to keep 480px as absolute size for the images to be resized"""
         with Image(blob=fp) as img:
@@ -641,7 +641,7 @@ class PCAPIRest(object):
             img.resize(100, 100)
             #upload the resized image
             self.provider.upload(path, StringIO(img.make_blob()) )
-            
+
     def filter_data(self, filters, path, userid):
         records_cache = self.rec_cache
         log.debug(records_cache)
@@ -728,7 +728,7 @@ class PCAPIRest(object):
                 elif frmt == "csv":
                     return self.convertToCSV(records_cache, userid)
         return records_cache
-    
+
     def get_media(self, records_cache, exts, frmt):
         """
         function for returning back the paths of the assets
@@ -769,7 +769,7 @@ class PCAPIRest(object):
                     zf.write(os.path.join(dirname, filename))
                 zf.close()
             return tname
-    
+
     def check_extension(self, exts, field):
         for ext in exts:
             if ext in field.lower():
