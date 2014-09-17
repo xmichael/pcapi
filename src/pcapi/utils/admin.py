@@ -11,7 +11,7 @@ def create_skeleton(path):
         return False
 
     config_file = resource_filename('pcapi', 'data/pcapi.ini.example')
-
+    server_file = resource_filename('pcapi', 'server.py')
     # create the folder structure
     os.makedirs(os.path.join(path, 'data'))
     os.makedirs(os.path.join(path, 'logs'))
@@ -19,6 +19,7 @@ def create_skeleton(path):
 
     # copy the config file
     shutil.copyfile(config_file, os.path.join(project_dir, 'pcapi.ini'))
+    shutil.copyfile(server_file, os.path.join(project_dir, 'server.py'))
     return True
 
 
