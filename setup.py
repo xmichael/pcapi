@@ -8,8 +8,7 @@ setup(
     include_package_data=True,
 
     package_data={
-        'pcapi': ['data/*'],
-        'wsgi': ['wsgi/*'],
+        'pcapi': ['data/*', 'wsgi/*'],
     },
 
     install_requires=['Wand==0.3.8',

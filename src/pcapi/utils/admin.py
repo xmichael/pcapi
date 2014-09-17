@@ -46,7 +46,7 @@ def parse_commandline():
     if args.action == 'create':
         if not create_skeleton(args.path):
             return
-        print 'Please edit %s/config.ini' % args.path
+        print 'Please edit %s/pcapi.ini' % args.path
 
     elif args.action == 'runserver':
         from pcapi.server import runserver
