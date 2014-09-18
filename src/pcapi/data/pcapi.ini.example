@@ -17,7 +17,8 @@ debug = true
 pcapi = .
 
 # logs for sending debug/error etc. message (used by lib/logtool.py)
-log_file = %(pcapi)s/logs/pcapi.log
+log_dir = %(pcapi)s/logs
+log_file = %(log_dir)s/pcapi.log
 
 # location of ExifTool ( exif binary is always at %(exifdir)/exiftool )
 exif_dir = %(pcapi)s/external/Image-ExifTool-8.75
