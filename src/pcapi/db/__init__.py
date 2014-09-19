@@ -1,1 +1,1 @@
-__all__ = ["spatialite","token", "appdb"]
+__all__ = ["connection", "token"]

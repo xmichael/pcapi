@@ -23,9 +23,6 @@ log_file = %(log_dir)s/pcapi.log
 # location of ExifTool ( exif binary is always at %(exifdir)/exiftool )
 exif_dir = %(pcapi)s/external/Image-ExifTool-8.75
 
-# libspatialite location
-libspatialite = /usr/lib/libspatialite.so.3
-
 # Dropbox egg location OR installation path
 dropbox_path = %(pcapi)s/../distributions/dropbox-1.4.1/dist/dropbox-1.4.1-py2.7.egg
 

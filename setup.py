@@ -23,10 +23,7 @@ setup(
                       'Jinja2==2.7.2',
                       'pysqlite==2.6.3',
                       'argparse==1.2.1'],
-    dependency_links=[
-        # Use custom pysqlite with the LOAD_EXTENSION enabled
-        'https://github.com/edina/pysqlite/archive/2.6.3.tar.gz#egg=pysqlite-2.6.3'
-    ],
+
     zip_safe=True,
     entry_points={
         'console_scripts': [

@@ -1,45 +1,23 @@
-## This is a Singleton class to return a spatialite instance.
-## Note to java coders: Singletons in python are just modules with plain functions.
-##
-## Usage:
-##      import spatialite
-##      output = spatialite.execute("select HEX(GeomFromText(?));",('POINT(788703.57 4645636.3)',))
-## The output is a a tuple of lists. To get the 2nd field from 3rd row just use output[2][1] (0-based index)
-
-## Devel's python has "surprisingly" disabled sqlite3 support unlike 99.9% of sane python installations.
+# Database connection wrapper
 try:
-    # make up for inconsistencies between normal linux distributions, devel.edina, rainbow.edina etc. etc.
     import pysqlite2.dbapi2 as db
     from pysqlite2.dbapi2 import OperationalError
 except ImportError:
     import sqlite3.dbapi2 as db
     from sqlite3.dbapi2 import OperationalError
-import os
 from pcapi import config, logtool
 
-### Constants ###
-log = logtool.getLogger("spatialite", "pcapi")
+log = logtool.getLogger("connection", "pcapi")
 
 # full path of sqlite3 database
-DB = config.get("path","sessionsdb")
-
+DB = config.get("path", "sessionsdb")
 log.debug(DB)
-
-# full path of libspatialite.so.3
-SPATIALPLUGIN = config.get("path", "libspatialite")
 
 # creating/connecting the test_db.
 # "check_same_thread" turns off some false alarms from sqlite3.
 # NOTE: mod_wsgi runs these global variables in *different* processes for each request.
 con = db.connect(DB, check_same_thread=False)
 
-# Revert to plain sqlite3 when libspatialite is missing
-if (os.path.exists(SPATIALPLUGIN)):
-    con.enable_load_extension(True)
-    con.load_extension(SPATIALPLUGIN)
-    con.enable_load_extension(False)
-else:
-    log.error("Can't load %s. REVERTING TO PLAIN SQLite3." % SPATIALPLUGIN)
 
 def execute(sql, args=()):
     """
