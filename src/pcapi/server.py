@@ -9,7 +9,7 @@ application = bottle.default_app()
 def runserver():
     bottle.run(host=config.get("server", "host"),
                port=config.get("server", "port"),
-               debug=config.get("server", "host"))
+               debug=config.getboolean("server", "debug"))
 
 
 if __name__ == '__main__':
