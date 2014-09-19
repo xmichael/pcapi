@@ -11,7 +11,7 @@ root_path = os.path.join(os.environ['HOME'], "local/pcapi" )
 # append the root directory in your python system path
 sys.path.append(root_path)
 # ... and the environment path to keep config.py happy.
-os.environ['ROOT_PATH'] = root_path
+# s.environ['PCAPI_ROOT_PATH'] = root_path
 
 # print sys.path
 
@@ -20,11 +20,10 @@ pwd = os.path.dirname(os.path.realpath(__file__))
 os.chdir(pwd)
 
 ## Also add library to the python path
-sys.path.append(os.path.join(pwd,'../'))
+sys.path.append(os.path.join(pwd, '../'))
 sys.path.append(pwd)
 
-from pcapi import config
-import pcapi_routes
+from pcapi import config, routes
 import bottle
 
 ##################################################

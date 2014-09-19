@@ -5,9 +5,9 @@ pwd = os.path.dirname(os.path.realpath(__file__))
 paths = os.path.dirname(__file__).split("/")
 
 #this is for local deployment
-#root_path = os.sep.join((os.environ['HOME'], 'local', 'pcapi'))
+root_path = os.sep.join((os.environ['HOME'], 'local', 'pcapi'))
 #this is for released ones
-root_path = os.sep.join((pwd, '..', '..'))
+#root_path = os.sep.join((pwd, '..', '..'))
 
 # append the root directory in your python system path
 #sys.path.append(root_path)
@@ -30,5 +30,5 @@ os.environ['ROOT_PATH'] = root_path
 
 import bottle
 
-import pcapi_routes
+from pcapi import routes
 application = bottle.default_app()
