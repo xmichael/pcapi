@@ -21,13 +21,12 @@ setup(
                       'threadpool==1.2.7',
                       'WebTest==2.0.4',
                       'Jinja2==2.7.2',
-                      'pysqlite==2.6.3',
-                      'argparse==1.2.1'],
+                      'pysqlite==2.6.3'],
 
     zip_safe=True,
     entry_points={
         'console_scripts': [
-            'pcapi-admin = pcapi.utils.admin:parse_commandline'
+            'pcapi = pcapi.server:runserver'
         ]
     }
 )
