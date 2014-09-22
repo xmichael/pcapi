@@ -39,7 +39,8 @@ def deploy(version='cobweb-dev'):
     % (env.port, CURRENT_PATH, env.user, env.host, REMOTE_PATH ) )
     
     with cd(REMOTE_PATH):
-        run("pip install .")
+        run("echo y | pip uninstall pcapi")
+        run("pip install --user .")
         #sudo("/etc/init.d/httpd graceful")
 
 def _config(var, section='install'):

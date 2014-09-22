@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name="pcapi",
-    version="0.4",
+    version="1.4",
     packages=find_packages('src'),
     package_dir={'': 'src'},
     include_package_data=True,
 
     package_data={
-        'pcapi': ['data/*', 'wsgi/*'],
+        'pcapi': ['data/*',],
     },
 
     install_requires=['Wand==0.3.8',
@@ -20,13 +20,13 @@ setup(
                       'simplekml==1.2.1',
                       'threadpool==1.2.7',
                       'WebTest==2.0.4',
-                      'Jinja2==2.7.2',
                       'pysqlite==2.6.3'],
 
     zip_safe=True,
     entry_points={
         'console_scripts': [
-            'pcapi = pcapi.server:runserver'
+            'pcapi = pcapi.server:runserver',
+            'pcapi_upgrade = pcapi.utils.pcapi_upgrade:upgrade_all_data'
         ]
     }
 )

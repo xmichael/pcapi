@@ -50,7 +50,7 @@ under ./docs:
 ### Sources:
 
 * under `./src/pcapi`:
-	* `setup.py`: The main wsgi app. Start reading the source here.
+	* `server.py`: The main wsgi app. Start reading the source here.
 
 	* `data`: default configuration file in .ini format. Configuration is copied to *~/.pcapi* folder during installation.
 * under `./src/test`: the test suite

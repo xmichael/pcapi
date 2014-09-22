@@ -54,7 +54,7 @@ if len(found_paths) == 0:
     default_config_file = resource_filename(__name__, 'data/pcapi.ini')
     config.read(default_config_file)
 else:
-    print 'Using the following config files'
+    print 'Loaded configuration from: ',
     for path in found_paths:
         print path
 
