@@ -32,7 +32,7 @@ records_num = 15
 app = TestApp(application)
 provider = 'local'
 
-class TestDatabaseExport(unittest.TestCase):
+class TestOGRExport(unittest.TestCase):
     """
     1) POST all test records
 
