@@ -27,13 +27,16 @@ DOS='dev_os'
 CHOZ='cam_hoz'
 CVERT='cam_vert'
 TSTMP='timestamp'
-COMPB='comp_bar' # Compass
-TILT='tilt'
+#COMPB='comp_bar' # Compass
+AZI='azimuth'
+PTH='pitch'
+RLL='roll'
+#TILT='tilt'
 TEMP='temp'
 PRESS='press'
 OBS_INSERT="INSERT INTO "+OBST+"("+RID+","+PSAT+","+PACC+","+PTECH+","+DOS+\
-","+CHOZ+","+CVERT+","+TSTMP+","+COMPB+","+TILT+","+TEMP+","+PRESS+\
-") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+","+CHOZ+","+CVERT+","+TSTMP+","+AZI+","+PTH+","+RLL+","+TEMP+","+PRESS+\
+") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
 
 #Observation group table
 OID='oid'
@@ -73,10 +76,16 @@ TIMES="Time Stamp"
 ACC='Accuracy'
 IMAGE='Image'
 FNAME='File Name'
-VAV='VA Vertical'
-VAH='VA Horizontal'
+VA='View Angle'
+VER='Vertical'
+HOR='Horizontal'
+COMPASS='Compass'
+AZIMUTH='Azimuth'
 PITCH='Pitch'
-YAW='Yaw'
+ROLL='Roll'
+#YAW='Yaw'
+TPR='Temperature'
+PRSS='Pressure'
 LS='Location Service'
 COORD='coordinates'
 MK='Marker'
@@ -132,10 +141,17 @@ def export(path):
                     polyline=prop.get(PL)
                     if polyline==None:
                     	polyline=''
-                    
-                   
-                    img.append(Img(prop[RIDENT],prop[FNAME],prop[TIMES],prop[ACC],prop[VAV],prop[VAH],\
-                    prop[PITCH],prop[YAW],prop[LS],coord[0],coord[1],mkX,mkY,polyline))
+                    temperature=prop.get(TPR)
+		    if temperature==None:
+			temperature='nan'
+		    
+		    pressure=prop.get(PRSS)
+		    if pressure==None:
+			pressure='nan'
+          	    viewAngle=prop[VA]
+		    compass=prop[COMPASS]        
+                    img.append(Img(prop[RIDENT],prop[FNAME],prop[TIMES],prop[ACC],viewAngle[VER],viewAngle[HOR],\
+                    compass[AZIMUTH],compass[PITCH],compass[ROLL],prop[LS],coord[0],coord[1],mkX,mkY,polyline,temperature,pressure))
             else:
                 for crd in coord[0]:
                     lat=crd[0]
@@ -204,8 +220,8 @@ def export(path):
     	import traceback;
         exMsg=traceback.format_exc()
         log.exception("Exception: "+exMsg)
-        return  {"error":1 , "msg": exMsg}
-        #return  {"error":1 , "msg": str(e)}
+        #return  {"error":1 , "msg": exMsg}
+        return  {"error":1 , "msg": str(e)}
         
 
     return { "error":0,"msg":"Operation successful"}
@@ -213,35 +229,37 @@ def export(path):
 
 class Img:
    
-    def __init__(self,recID,fileN,timeS,accuracy,vaV,vaH,pitch,yaw,lService,lt,ln,markerX,markerY,polyL):
+    def __init__(self,recID,fileN,timeS,accuracy,vaV,vaH,azimuth,pitch,roll,lService,lt,ln,markerX,markerY,polyL,tmp,prss):
         self.rid=recID
         self.fn=fileN
         self.ts=timeS
         self.acc=accuracy
         self.vav=vaV
         self.vah=vaH
+	self.azi=azimuth
         self.pth=pitch
-        self.yw=yaw
+	self.rll=roll
+        #self.yw=yaw
         self.ls=lService
         self.lat=lt
         self.lon=ln
         self.mkX=markerX
         self.mkY=markerY
         self.pl=polyL
-   		
+	self.temp=tmp
+   	self.press=prss
    		
     def insert(self,cursor,oid,userid,osver):
         
-        #RID+","+PSAT+","+PACC+","+PTECH+","+DOS+\
-		#","+CHOZ+","+CVERT+","+TSTMP+","+COMPB+","+TILT+","+TEMP+","+PRESS+\
+        
         
         nSat=0
         if "GPS" in self.ls:
         	nSat=self.ls[self.ls.index('(')+1:self.ls.index(')')]
-        #  compass(COMPB), tilt, temperature, and pressure
+        
         
         cursor.execute(OBS_INSERT,\
-        (self.rid,nSat,self.acc,self.ls,osver,self.vah,self.vav,self.ts,'nan','nan','nan','nan'))
+        (self.rid,nSat,self.acc,self.ls,osver,self.vah,self.vav,self.ts,self.azi,self.pth,self.rll,self.temp,self.press))
         
         
         mk=str(self.mkX)+' '+str(self.mkY)
