@@ -24,6 +24,7 @@ from pcapi import ogr, dbox_provider, fs_provider, logtool
 from pcapi.form_validator import FormValidator, Editor
 from pcapi.cobweb_parser import COBWEBFormParser
 from pcapi.exceptions import DBException, FsException
+from pcapi.publish import postgis
 
 log = logtool.getLogger("PCAPIRest", "pcapi")
 #global number of threads
@@ -215,12 +216,12 @@ class PCAPIRest(object):
             return {"records": bulk, "error": 0 }
 
 
-    def records(self, provider, userid, path, flt):
+    def records(self, provider, userid, path, flt, ogc_sync):
         """
             Update/Overwrite/Create/Delete/Download records.
 
         """
-        log.debug('records( %s, %s, %s, %s)' % (provider, userid, path, str(flt)) )
+        log.debug('records( %s, %s, %s, %s, %s)' % (provider, userid, path, str(flt), str(ogc_sync) ))
         error = self.auth(provider,userid)
         if (error):
             return error
@@ -229,35 +230,18 @@ class PCAPIRest(object):
         try:
             recordname_lst = re.findall("/records//?([^/]*)$", path)
             if recordname_lst:
-                # We have a depth 1 e.g. /records/myrecord or just /records/
                 if self.request.method == "PUT":
-                    ### This case if for moving a record folder to another folder
-                    #return { "error": 1, "msg": "PUT request needs 2 level paths e.g.  \
-                    #/records/level1/filename instead of %s" % path}
-                    #log.debug(self.request.body.read())
-                    path2 = "/records/%s" % self.request.body.read()
-                    log.debug(path2)
-                    md = self.provider.move(path, path2)
-                    log.debug(md)
-                    if md.path() != path:
-                        newname = md.path()[md.path().rfind("/") + 1:]
-                        def proc(fp):
-                            j = json.loads(fp.read())
-                            j["name"]=newname
-                            log.debug("Name collision. Renamed record to: " + newname)
-                            return StringIO(json.dumps(j))
-                        cb = proc
-                    else:
-                        cb = None
-                    path = md.path() + "/record.json"
-                    #return self.fs(provider, userid, path, cb)
-                    #log.debug(md.ls())
-                    return { "error": 0, "msg" : "File uploaded", "path":md.ls()}
+                    ## NOTE: Put is *not* currently used by FTOPEN
+                    res = self.fs(provider, userid, path)
+                    if res['error'] == 0 and ogc_sync:
+                        postgis.put_record(provider, userid, res["path"])
+                    return res
                 if self.request.method == "POST":
                     ## We are in depth 1. Create directory (or rename directory) and then upload record.json
                     md = self.provider.mkdir(path)
                     # check path is different and add a callback to update the record's name
                     if ( md.path() != path ):
+                        ### moved a myrecord/record.json to a new folder anothername/record.json
                         newname = md.path()[md.path().rfind("/") + 1:]
                         def proc(fp):
                             j = json.loads(fp.read())
@@ -268,10 +252,20 @@ class PCAPIRest(object):
                     else:
                         cb = None
                     path = md.path() + "/record.json"
-                    return self.fs(provider, userid, path, cb)
+                    res = self.fs(provider, userid, path, cb)
+
+                    # Sync to PostGIS database after processing with self.fs()
+                    # (Path resolution already done for us so we can just put/overwrite the file)
+                    if res['error'] == 0 and ogc_sync:
+                        postgis.put_record(provider, userid, res["path"])
+                    return res
                 if self.request.method == "DELETE":
                     ### DELETE refers to /fs/ directories
-                    return self.fs(provider,userid,path)
+                    res =  self.fs(provider,userid,path)
+                    # Sync to PostGIS database if required
+                    if res['error'] == 0 and ogc_sync:
+                        postgis.delete_record(provider, userid, path)
+                    return res
                 if self.request.method == "GET":
                     # Check if empty path
                     if path == "/records//" and not self.provider.exists(path):
@@ -407,8 +401,7 @@ class PCAPIRest(object):
                                 return { "error": 1, "msg" : "The editor is not valid"}
             ######## PUT -> Upload/Overwrite file using dropbox rules ########
             if method=="PUT":
-                # if process is defined then pipe the body through process
-                fp = self.request.body if not process else process(self.request.body)
+                fp = self.request.body
                 md = self.provider.upload(path, fp, overwrite=True)
                 return { "error": 0, "msg" : "File uploaded", "path":md.ls()}
             ######## POST -> Upload/Rename file using dropbox rules ########

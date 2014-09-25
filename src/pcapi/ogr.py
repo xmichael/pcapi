@@ -20,10 +20,10 @@ def toPostGIS(data, userid):
     # If an email is used for userid we need to change `@' and `.' to something valid
     # for Postgres tables
     tablename = userid.replace('@','_at_').replace('.','_dot_')
-    host = config.get("ogr","database_host")
-    database = config.get("ogr","database_database")
-    user = config.get("ogr","database_user")
-    password = config.get("ogr","database_password")
+    host = config.get("pg","database_host")
+    database = config.get("pg","database_database")
+    user = config.get("pg","database_user")
+    password = config.get("pg","database_password")
 
     target = TARGET_POSTGIS.format( USER=user, DATABASE=database, HOST=host, PASSWORD=password )
     source = data
