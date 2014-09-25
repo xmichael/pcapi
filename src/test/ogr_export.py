@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Export to an OGR compatible datasource. Currently only PostGIS is supported with the
-intent to extend this to other formats (e.g. GeoPackage)
+intention to extend this to other formats (e.g. GeoPackage)
 
 Test Process:
 1) Upload a few test records from the ENVSYS test-data
@@ -32,7 +32,7 @@ records_num = 15
 app = TestApp(application)
 provider = 'local'
 
-class TestDatabaseExport(unittest.TestCase):
+class TestOGRExport(unittest.TestCase):
     """
     1) POST all test records
 
