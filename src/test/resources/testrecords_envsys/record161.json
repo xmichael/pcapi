@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1708.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Jeremy Marsh",
+	"point" : {
+		"lon" : -3.9784,
+		"lat" : 52.502,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-13T11:33:26Z"
+}

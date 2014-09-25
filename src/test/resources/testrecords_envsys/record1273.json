@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "SessileOak",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Quercus petraea",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2470.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Jeffery Miles",
+	"point" : {
+		"lon" : -3.7939,
+		"lat" : 52.683,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-24T11:22:55Z"
+}

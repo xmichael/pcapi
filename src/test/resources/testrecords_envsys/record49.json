@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "SessileOak",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Quercus petraea",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1058.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Jean Washington",
+	"point" : {
+		"lon" : -3.609,
+		"lat" : 52.686,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-05T13:00:51Z"
+}

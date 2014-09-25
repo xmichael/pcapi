@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1073.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Ira Greer",
+	"point" : {
+		"lon" : -3.7286,
+		"lat" : 52.643,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-04T12:07:38Z"
+}

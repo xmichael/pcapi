@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Ivy",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Hedera helix",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1552.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Randal Bridges",
+	"point" : {
+		"lon" : -3.7205,
+		"lat" : 52.55,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-02-28T06:00:17Z"
+}

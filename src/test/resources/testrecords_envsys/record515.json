@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Ivy",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Hedera helix",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1908.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Rudy Wagner",
+	"point" : {
+		"lon" : -3.9504,
+		"lat" : 52.507,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-08T10:59:43Z"
+}

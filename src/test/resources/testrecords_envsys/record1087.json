@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Rowan",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Sorbus aucuparia",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1519.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Kelli Lindsey",
+	"point" : {
+		"lon" : -3.7988,
+		"lat" : 52.641,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-28T14:56:49Z"
+}

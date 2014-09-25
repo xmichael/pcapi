@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "SessileOak",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Quercus petraea",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2339.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Ira Greer",
+	"point" : {
+		"lon" : -3.8519,
+		"lat" : 52.69,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-03T14:19:46Z"
+}

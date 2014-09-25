@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Birch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2700.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Patricia Jefferson",
+	"point" : {
+		"lon" : -3.7704,
+		"lat" : 52.565,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-13T17:51:31Z"
+}

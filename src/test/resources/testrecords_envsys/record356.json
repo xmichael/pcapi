@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Holly",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Ilex aquifolium",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1539.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Tony Harris",
+	"point" : {
+		"lon" : -3.7929,
+		"lat" : 52.535,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-27T19:48:29Z"
+}

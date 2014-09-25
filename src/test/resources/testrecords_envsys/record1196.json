@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "DownyBirch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula pubescens",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2893.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Clinton Bass",
+	"point" : {
+		"lon" : -3.8307,
+		"lat" : 52.576,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-10T10:07:22Z"
+}

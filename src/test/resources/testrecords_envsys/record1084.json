@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "DownyBirch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula pubescens",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2402.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Dixie Brock",
+	"point" : {
+		"lon" : -3.8373,
+		"lat" : 52.683,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-27T12:19:33Z"
+}

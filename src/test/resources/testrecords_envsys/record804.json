@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Holly",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Ilex aquifolium",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2119.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Muriel George",
+	"point" : {
+		"lon" : -3.7274,
+		"lat" : 52.598,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-09T14:28:16Z"
+}

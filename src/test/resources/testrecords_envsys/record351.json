@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "SessileOak",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Quercus petraea",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2691.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Reginald Young",
+	"point" : {
+		"lon" : -3.6653,
+		"lat" : 52.73,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-25T16:35:15Z"
+}

@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "SessileOak",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Quercus petraea",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1068.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Dewey Mason",
+	"point" : {
+		"lon" : -4.0293,
+		"lat" : 52.549,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-08T17:27:26Z"
+}

@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Holly",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Ilex aquifolium",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1766.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Jaime Aguilar",
+	"point" : {
+		"lon" : -3.7988,
+		"lat" : 52.641,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-29T08:51:37Z"
+}

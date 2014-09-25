@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2671.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Tony Harris",
+	"point" : {
+		"lon" : -3.7286,
+		"lat" : 52.643,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-30T11:58:24Z"
+}

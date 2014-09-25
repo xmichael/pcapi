@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "DownyBirch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula pubescens",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2989.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Jaime Aguilar",
+	"point" : {
+		"lon" : -3.8581,
+		"lat" : 52.609,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-10T06:07:40Z"
+}

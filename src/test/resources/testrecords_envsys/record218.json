@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Rowan",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Sorbus aucuparia",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1201.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Walter Arnold",
+	"point" : {
+		"lon" : -3.8323,
+		"lat" : 52.504,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-01T11:13:24Z"
+}
