@@ -24,6 +24,7 @@ from pcapi import ogr, dbox_provider, fs_provider, logtool
 from pcapi.form_validator import FormValidator, Editor
 from pcapi.cobweb_parser import COBWEBFormParser
 from pcapi.exceptions import DBException, FsException
+from pcapi.publish import postgis
 
 log = logtool.getLogger("PCAPIRest", "pcapi")
 #global number of threads
@@ -215,12 +216,12 @@ class PCAPIRest(object):
             return {"records": bulk, "error": 0 }
 
 
-    def records(self, provider, userid, path, flt):
+    def records(self, provider, userid, path, flt, ogc_sync):
         """
             Update/Overwrite/Create/Delete/Download records.
 
         """
-        log.debug('records( %s, %s, %s, %s)' % (provider, userid, path, str(flt)) )
+        log.debug('records( %s, %s, %s, %s, %s)' % (provider, userid, path, str(flt), str(ogc_sync) ))
         error = self.auth(provider,userid)
         if (error):
             return error
@@ -231,7 +232,10 @@ class PCAPIRest(object):
             if recordname_lst:
                 if self.request.method == "PUT":
                     ## NOTE: Put is *not* currently used by FTOPEN
-                    return self.fs(provider, userid, path)
+                    res = self.fs(provider, userid, path)
+                    if res['error'] == 0 and ogc_sync:
+                        postgis.put_record(provider, userid, res["path"])
+                    return res
                 if self.request.method == "POST":
                     ## We are in depth 1. Create directory (or rename directory) and then upload record.json
                     md = self.provider.mkdir(path)
@@ -248,10 +252,20 @@ class PCAPIRest(object):
                     else:
                         cb = None
                     path = md.path() + "/record.json"
-                    return self.fs(provider, userid, path, cb)
+                    res = self.fs(provider, userid, path, cb)
+
+                    # Sync to PostGIS database after processing with self.fs()
+                    # (Path resolution already done for us so we can just put/overwrite the file)
+                    if res['error'] == 0 and ogc_sync:
+                        postgis.put_record(provider, userid, res["path"])
+                    return res
                 if self.request.method == "DELETE":
                     ### DELETE refers to /fs/ directories
-                    return self.fs(provider,userid,path)
+                    res =  self.fs(provider,userid,path)
+                    # Sync to PostGIS database if required
+                    if res['error'] == 0 and ogc_sync:
+                        postgis.delete_record(provider, userid, path)
+                    return res
                 if self.request.method == "GET":
                     # Check if empty path
                     if path == "/records//" and not self.provider.exists(path):

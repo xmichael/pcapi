@@ -44,7 +44,8 @@ def assets(provider, userid, path="/"):
 @route('/records/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE","OPTIONS"] )
 def records(provider, userid, path="/"):
     flt = request.GET.get("filter")
-    return PCAPIRest(request,response).records(provider, userid, path, flt)
+    ogc_sync = True if request.GET.get("ogc_sync") else False
+    return PCAPIRest(request,response).records(provider, userid, path, flt, ogc_sync)
 
 ###  /editors/... API ###
 
@@ -95,9 +96,9 @@ def init_static_routes():
 
 @hook('after_request')
 def enable_cors():
-    log.debug(request.headers.get('persistent-id'))
+    log.debug("persistent-id " + `request.headers.get('persistent-id')`)
     #here's the id we need for uploading data
-    log.debug(request.headers.get('employeeNumber'))
+    log.debug("persistent-id: " + `request.headers.get('employeeNumber')`)
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS, DELETE'
 
