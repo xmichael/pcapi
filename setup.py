@@ -20,6 +20,7 @@ setup(
                       'simplekml==1.2.1',
                       'threadpool==1.2.7',
                       'WebTest==2.0.4',
+                      'psycopg2==2.5.3',
                       'pysqlite==2.6.3'],
 
     zip_safe=True,

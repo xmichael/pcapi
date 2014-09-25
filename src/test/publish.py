@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Export to an OGR compatible datasource. Currently only PostGIS is supported with the
-intention to extend this to other formats (e.g. GeoPackage)
+Publish to OGC W*S services. Includes:
+1) Tests for syncing to a PostGIS databases
+2) Tests for exporting the database to a running Geoserver instance
 
 Test Process:
 1) Upload a few test records from the ENVSYS test-data
 2) Export to PostGIS
+3) Add table to geoserver
 
 """
 import os
@@ -16,7 +18,7 @@ from webtest import TestApp
 
 ## Also libraries to the python path
 pwd = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.join(pwd, '../'))  # to find the classes to test
+sys.path.insert(1,os.path.join(pwd, '../'))  # takes precedence over ~/.local
 
 from pcapi.server import application
 from pcapi import config
@@ -32,11 +34,11 @@ records_num = 15
 app = TestApp(application)
 provider = 'local'
 
-class TestOGRExport(unittest.TestCase):
+class TestPublish(unittest.TestCase):
     """
     1) POST all test records
 
-    2) EXPORT to postgis
+    2) DELETE one of them
         /records/local/USER/?filter=database&ftl
     """
     ########### UPLOAD RECORDS ###########
@@ -48,13 +50,12 @@ class TestOGRExport(unittest.TestCase):
         url = '/records/{0}/{1}//'.format(provider,userid)
         app.delete(url)
 
-        # POST records_num records from the envsys dataset
+        # RECORD POST records_num records from the envsys dataset
         for i in xrange (records_num):
             record_file = os.path.join(envsys_records_dir, "record%s.json" % str(i)) #full path
-            url='/fs/{0}/{1}/records/{2}/record.json'.format(provider,userid, str(i))
+            url='/records/{0}/{1}/{2}?ogc_sync=true'.format(provider,userid, str(i))
             with open (record_file) as f:
                 resp = app.post(url, params=f.read() ).json
-            print `resp`
             self.assertEquals(resp["error"], 0 )
 
         # Test POST by reading the first contents of /records/0/ whuich should be the record0.json
@@ -62,13 +63,18 @@ class TestOGRExport(unittest.TestCase):
         self.assertTrue("/records/0/record.json" in resp["metadata"])
 
 
-    def test_export_to_database(self):
+    def test_delete_records(self):
         """
-        Export all records to a database named after the userid/uuid probably with
-        some character mangling.
+        delete a test record
         """
+        #post a file just in case
+        record_file = os.path.join(envsys_records_dir, "record0.json")#full path
+        url='/records/{0}/{1}/{2}?ogc_sync=true'.format(provider,userid, "0")
+        with open (record_file) as f:
+            resp = app.post(url, params=f.read() ).json
+        self.assertEquals(resp["error"], 0 )
 
-        #export to database
-        url = '/records/{0}/{1}/?filter=format&frmt=database'.format(provider,userid)
-        resp = app.get(url)
-        self.assertEquals(resp.json["error"], 0)
+        #delete it
+        url = '/records/{0}/{1}/0?ogc_sync=true'.format(provider,userid)
+        resp = app.delete(url).json
+        self.assertEquals(resp["error"], 0)
