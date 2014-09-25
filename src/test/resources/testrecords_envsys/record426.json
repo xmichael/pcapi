@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "DownyBirch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula pubescens",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1670.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Aubrey Neal",
+	"point" : {
+		"lon" : -3.9706,
+		"lat" : 52.517,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-05-06T15:20:00Z"
+}

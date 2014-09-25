@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "SessileOak",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Quercus petraea",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2244.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Sherman Robbins",
+	"point" : {
+		"lon" : -3.8193,
+		"lat" : 52.547,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-09T12:39:53Z"
+}

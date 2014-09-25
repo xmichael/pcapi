@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Rowan",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Sorbus aucuparia",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1507.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Ira Greer",
+	"point" : {
+		"lon" : -3.8363,
+		"lat" : 52.623,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-30T08:10:30Z"
+}

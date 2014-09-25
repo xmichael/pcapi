@@ -1,17 +1,17 @@
 {
-  "editor": "text.edtr",
-  "fields": [
-    {
-      "id": "fieldcontain-textarea-1",
-      "val": "Testarw",
-      "label": "Description"
-    }
-  ],
-  "name": "test",
-  "point": {
-    "lon": -3.187329203375782,
-    "lat": 55.92944573914203,
-    "alt": null
+  "geometry": {
+    "type": "Point",
+    "coordinates": [-3.187329203375782, 55.92944573914203]
   },
-  "timestamp": "2013-04-25T11:27:30.138Z"
+  "properties": {
+    "editor": "text.edtr",
+    "fields": [
+      {
+        "id": "fieldcontain-textarea-1",
+        "val": "Testarw",
+        "label": "Description"
+      }
+    ],
+    "timestamp": "2013-04-25T11:27:30.138Z"
+  }
 }

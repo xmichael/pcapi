@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "SessileOak",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Quercus petraea",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG3000.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Wilbert Allison",
+	"point" : {
+		"lon" : -3.663,
+		"lat" : 52.592,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-05T11:38:58Z"
+}

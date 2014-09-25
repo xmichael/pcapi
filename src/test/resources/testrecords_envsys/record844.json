@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Holly",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Ilex aquifolium",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1279.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Lila Fleming",
+	"point" : {
+		"lon" : -3.7197,
+		"lat" : 52.694,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-28T06:11:23Z"
+}

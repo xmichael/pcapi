@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2681.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Jean Washington",
+	"point" : {
+		"lon" : -4.0297,
+		"lat" : 52.471,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-02-26T10:42:35Z"
+}

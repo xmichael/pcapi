@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Rowan",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Sorbus aucuparia",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1103.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Wilbert Allison",
+	"point" : {
+		"lon" : -4.0588,
+		"lat" : 52.435,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-02-26T15:06:16Z"
+}

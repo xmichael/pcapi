@@ -1,8 +1,26 @@
 tmp
-*.pyc
 .DS_Store
-bower_components
-node_modules
-bower_components/*
-*.keystore
 
+
+# Python
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg

@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "DownyBirch",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Betula pubescens",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1306.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Elbert Burke",
+	"point" : {
+		"lon" : -3.8965,
+		"lat" : 52.557,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-04T06:00:11Z"
+}

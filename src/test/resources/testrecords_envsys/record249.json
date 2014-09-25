@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Hazel",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Corylus avellana",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1056.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Pedro Reese",
+	"point" : {
+		"lon" : -3.8986,
+		"lat" : 52.567,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-08T16:12:55Z"
+}

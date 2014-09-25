@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Bramble",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Rubus",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG2075.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Tony Harris",
+	"point" : {
+		"lon" : -3.8581,
+		"lat" : 52.609,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-04-05T16:50:46Z"
+}

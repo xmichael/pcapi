@@ -1,0 +1,27 @@
+{
+	"editor" : "Woodland Survey.edtr",
+	"fields" : [
+		{
+			"id" : "fieldcontain-textarea-1",
+			"val" : "Ash",
+			"label" : "Common Name"
+		},
+		{
+			"id" : "fieldcontain-textarea-2",
+			"val" : "Fraxinus excelsior",
+			"label" : "Latin Name"
+		},
+		{
+			"id" : "fieldcontain-image-1",
+			"val" : "IMAG1476.jpg",
+			"label" : "Take"
+		}
+	],
+	"name" : "Alexandra Bowman",
+	"point" : {
+		"lon" : -3.5701,
+		"lat" : 52.612,
+		"alt" : "null"
+	},
+	"timestamp" : "2014-03-10T19:28:29Z"
+}
