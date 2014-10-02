@@ -2,6 +2,7 @@ import psycopg2
 import sys
 import ppygis
 import logtool
+import socket, struct, fcntl
 
 #DB Constants
 HOST='localhost'
@@ -163,11 +164,7 @@ def export(path):
         oid=path[path.rindex('/')+1:path.rindex('.')]
         userid=oid[0:oid.rindex('_')]
         osver=fcProp[OSV]
-        
-       
-      
-       
-       	
+  
         dec=fcProp[DEC]
        
        
@@ -191,9 +188,11 @@ def export(path):
         cursor.execute(OBSGP_INSERT,\
         (oid,note,timeSt,point))
        
+	ipA=ipaddr('eth0')+"/fs/local/"+path[0:path.rindex('/')+1]
 
+	
         for image in img:
-            image.insert(cursor,oid,userid,osver)
+            image.insert(cursor,oid,userid,osver,ipA)
       
         #OID+","+OPT
         
@@ -249,7 +248,7 @@ class Img:
 	self.temp=tmp
    	self.press=prss
    		
-    def insert(self,cursor,oid,userid,osver):
+    def insert(self,cursor,oid,userid,osver,ipA):
         
         
         
@@ -257,7 +256,9 @@ class Img:
         if "GPS" in self.ls:
         	nSat=self.ls[self.ls.index('(')+1:self.ls.index(')')]
         
-        
+
+	
+        print self.rid
         cursor.execute(OBS_INSERT,\
         (self.rid,nSat,self.acc,self.ls,osver,self.vah,self.vav,self.ts,self.azi,self.pth,self.rll,self.temp,self.press))
         
@@ -267,14 +268,28 @@ class Img:
            
         ipoint=ppygis.Point(self.lat, self.lon)
         ipoint.srid=SRID
-           
-        #to do: add va
+        
+        imURL=ipA+self.fn
+	print imURL
         #PL+","+FL+","+MRK+","+RID
         cursor.execute(IMG_INSERT,\
-        (self.pl,self.fn,mk,self.rid))
+        (self.pl,imURL,mk,self.rid))
         
         
         
         #OID+","+RID
         cursor.execute(REC_INSERT,\
         (oid,self.rid)) 
+
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sockfd = sock.fileno()
+SIOCGIFADDR = 0x8915
+def ipaddr(iface = 'eth0'):
+	ifreq = struct.pack('16sH14s', iface, socket.AF_INET, '\x00'*14)
+  	try:
+		res = fcntl.ioctl(sockfd, SIOCGIFADDR, ifreq)
+	except:
+		return None
+	ip = struct.unpack('16sH2x4s8x', res)[2]
+	return socket.inet_ntoa(ip)
