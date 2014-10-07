@@ -35,7 +35,7 @@ if host:
     conn_string += " host={host} password={password}".format(host=host, password=password)
 
 # NOTE: mod_wsgi could initialize these global variables in *different* processes for each request.
-con = psycopg2.connect(conn_string)
+con = None
 
 def execute(sql, args=()):
     """
@@ -51,6 +51,10 @@ def execute(sql, args=()):
                 rows (list): rows (or None if no output)
                 status (str): status message from postgres
     """
+    # Start connection if None
+    if not con:
+        psycopg2.connect(conn_string)
+    
     with con.cursor() as cur:
         cur.execute(sql, args)
         con.commit()
