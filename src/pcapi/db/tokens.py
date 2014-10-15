@@ -57,6 +57,13 @@ def save_unverified_request( userid, req_secret ):
         """, (userid,req_secret))
     return res==[]
 
+def delete_unverified_request(userid):
+    """ Delete an user temporary request returns always True """
+    res = spatialite.execute("""
+        DELETE FROM temp_request WHERE userid=?
+        """, (userid,))
+    return res == []
+
 def prune_temp_request():
     """ delete temporary requests tables. Should be called at app startup """
     res = connection.execute("""

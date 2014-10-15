@@ -3,6 +3,8 @@ import time
 from pcapi import config, logtool
 from pcapi.db import tokens
 from dropbox import client, session, rest
+from db import tokens
+from urlparse import urlsplit, urlunsplit
 
 ### Static Variables ###
 APP_KEY = config.get("dropbox","app_key")
@@ -10,9 +12,10 @@ APP_SECRET = config.get("dropbox","app_secret")
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
 STATE_CODES = {
-        "verify_token": 0,
-        "connected" : 1
-    }
+    "verify_token": 0,
+    "connected": 1,
+    "non_authorized": 2
+}
 
 
 # CAPABILITIES that this provider supports
@@ -92,12 +95,14 @@ class DropboxProvider(object):
                 "state" : STATE_CODES["verify_token"]
             }
 
-    def login(self, req_key = None, callback = None):
+
+    def login(self, req_key=None, callback=None, async=False):
         """ Create a URL which the browser can use to verify a token and redirect to webapp.
 
         Args:
             req_key : request key (not secret!), cached by session cookie (optional)
             callback : where to redirect the browser after login
+            async: if async polling is used
 
         Returns:
             None: if connection is already established (from cookie) or
@@ -111,6 +116,7 @@ class DropboxProvider(object):
 
         #check if user has request token.
         if (req_key):
+            log.debug("User has a token: " + req_key)
             # check if a req token has an access pair
             accesspair = tokens.get_access_pair(req_key)
             if not accesspair:
@@ -137,6 +143,13 @@ class DropboxProvider(object):
         if (not self.sess.is_linked()):
             log.debug("Session not linked -- Creating new session")
             self.request_token = self.sess.obtain_request_token()
+            # If we are using async include the userid in the callback
+            if async:
+                url = urlsplit(callback)
+                mod_path = '%s/%s' % (url.path, self.request_token.key)
+                callback = urlunsplit((url.scheme, url.netloc, mod_path,
+                                       url.query, url.fragment))
+
             url = self.sess.build_authorize_url(self.request_token, callback)
             self.state = { "url" : url , "userid" : self.request_token.key , "state" : STATE_CODES["verify_token"] }
             tokens.save_unverified_request( self.request_token.key, self.request_token.secret )
@@ -144,15 +157,25 @@ class DropboxProvider(object):
             self.state = { "state" : STATE_CODES["connected"], "name": self.account_info()["display_name"]}
         return self.state
 
+    def revoke(self, req_key):
+        """ Revoke the request key
+            Args: req_key
+        """
+        tokens.delete_unverified_request(req_key)
+
+
     def probe(self, req_key):
         """ Check if req_key has associated access key.
             Only use this when polling for the first time otherwise you may get false positives for
             stored credentials that have expired.
         """
-        if not tokens.get_access_pair(req_key):
+        if tokens.get_access_pair(req_key):
+            self.state = { "state" : STATE_CODES["connected"] }
+        elif tokens.get_request_pair(req_key):
             self.state = { "state" : STATE_CODES["verify_token"] }
         else:
-            self.state = { "state" : STATE_CODES["connected"] }
+            self.state = { "state" : STATE_CODES["non_authorized"] }
+
         return self.state
 
     def upload(self,name, fp, overwrite=False):
