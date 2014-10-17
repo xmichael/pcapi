@@ -3,12 +3,15 @@ import sys
 import ppygis
 import logtool
 import socket, struct, fcntl
+import config
 
 #DB Constants
-HOST='localhost'
-USER='user'
-PASSWD='cobweb'
-DBNAME='tstdb'
+
+HOST = config.get("pg","database_host")
+DBNAME = config.get("pg","database_database")
+USER = config.get("pg","database_user")
+PASSWD = config.get("pg","database_password")
+
 SRID=4326
 #Table names
 OBSGP='obsgroup'
