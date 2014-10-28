@@ -62,6 +62,21 @@ class TestPublish(unittest.TestCase):
         resp = app.get('/fs/{0}/{1}/records/0'.format(provider,userid) ).json
         self.assertTrue("/records/0/record.json" in resp["metadata"])
 
+    def test_post_records_newformat(self):
+        """ PREPARATION: posts newer format with the empty WP4 values
+        and decision trees and whatever people think about in the next
+        hour """
+        #cleanup previous cruft under /records/
+        # -- not necessary since we are overwriting the records
+        url = '/records/{0}/{1}//'.format(provider,userid)
+        app.delete(url)
+
+        # RECORD POST records_num records from the envsys dataset
+        record_file = os.path.join(envsys_records_dir, "newformat.json" % str(i)) #full path
+        url='/records/{0}/{1}/{2}?ogc_sync=true'.format(provider,userid, str(i))
+        with open (record_file) as f:
+            resp = app.post(url, params=f.read() ).json
+        self.assertEquals(resp["error"], 0 )
 
     def test_delete_records(self):
         """

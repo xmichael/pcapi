@@ -52,9 +52,10 @@ def execute(sql, args=()):
                 status (str): status message from postgres
     """
     # Start connection if None
+    global con
     if not con:
-        psycopg2.connect(conn_string)
-    
+        con = psycopg2.connect(conn_string)
+
     with con.cursor() as cur:
         cur.execute(sql, args)
         con.commit()
@@ -103,9 +104,17 @@ def delete_record(provider, userid, path):
     log.debug("Postgis DELETE: %s , %s , %s" % (provider, userid, path))
     return True
 
+def table_exists(tablename):
+    """ Returns True if table exists else False """
+    # stub
+    res = execute("SELECT EXISTS( SELECT * FROM information_schema.tables WHERE table_name = %s )", (tablename,))
+    return res["rows"][0][0]
+
 if __name__=="__main__":
     print "Starting connection with PostGIS database: " + conn_string
     print `execute("CREATE TABLE IF NOT EXISTS test (id serial PRIMARY KEY, num integer, data varchar);")`
     print `execute("INSERT INTO test (num, data) VALUES (%s, %s)",(100, "abc'def"))`
     print `execute("SELECT * FROM test;")`
+    if table_exists("test"):
+        print "test exists"
     print `execute("DROP TABLE test;")`
