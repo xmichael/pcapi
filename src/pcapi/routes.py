@@ -70,8 +70,8 @@ def tiles(provider, userid, path="/"):
 
 ###  /fs/... API ###
 
-@route('/fs/<provider>/<userid>/',method=["GET","POST","PUT","DELETE"] )
-@route('/fs/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE"] )
+@route('/fs/<provider>/<userid>/',method=["GET","POST","PUT","DELETE","OPTIONS"] )
+@route('/fs/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE","OPTIONS"] )
 def fs(provider, userid, path="/"):
     """ Upload file to path (as documented in the API docs)
     """
@@ -107,6 +107,7 @@ def enable_cors():
     log.debug("persistent-id: " + `request.headers.get('employeeNumber')`)
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS, DELETE'
+    response.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept'
 
 ### Error pages ###
 @bottle.error(404)
