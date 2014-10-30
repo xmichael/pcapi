@@ -20,6 +20,7 @@ IMGT='images'
 POLT='observation_polygons'
 DECT='decision'
 RECOT='recordobs'
+RECUSER='recorduser'
 
 
 #Observation table
@@ -72,6 +73,11 @@ POL_INSERT="INSERT INTO "+POLT+"("+OID+","+GEO+\
 #Record observation table
 REC_INSERT="INSERT INTO "+RECOT+"("+OID+","+RID+\
 		") VALUES (%s,%s);"
+
+#Record user table
+USER_ID='UserID'
+RU_INSERT="INSERT INTO "+RECUSER+"("+RID+","+USER_ID+\
+		") VALUES (%s,%s);"
 		
 #App Constants
 PROP='properties'
@@ -102,6 +108,7 @@ POINT='Point'
 DEC='Decision'
 RIDENT='Record ID'
 OSV='OS Version'
+
 
         
 log = logtool.getLogger("Export Variable GeoJSON", "pcapi")
@@ -213,6 +220,8 @@ def export(path):
        
        		#OID+","+GEO
             cursor.execute(POL_INSERT,(oid,pgon))
+	else:
+	    cursor.execute(POL_INSERT,(oid,None))
                
         conn.commit()
         cursor.close()
@@ -282,7 +291,11 @@ class Img:
         
         #OID+","+RID
         cursor.execute(REC_INSERT,\
-        (oid,self.rid)) 
+        (oid,self.rid))
+
+	#RID, USER_ID
+	cursor.execute(RU_INSERT,\
+	(self.rid,userid))
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
