@@ -173,7 +173,8 @@ def export(path):
         fcProp=geojflood[PROP]
         note=fcProp[NOTE]
         oid=path[path.rindex('/')+1:path.rindex('.')]
-        userid=oid[0:oid.rindex('_')]
+        userid=path[0:path.index('/')]
+	
         osver=fcProp[OSV]
   
         dec=fcProp[DEC]
@@ -233,7 +234,7 @@ def export(path):
         exMsg=traceback.format_exc()
         log.exception("Exception: "+exMsg)
         #return  {"error":1 , "msg": exMsg}
-        return  {"test error":1 , "msg": str(e)}
+        return  {"error":1 , "msg": str(e)}
         
 
     return { "error":0,"msg":"Operation successful"}
