@@ -39,14 +39,15 @@ RLL='roll'
 #TILT='tilt'
 TEMP='temp'
 PRESS='press'
+GEO='geom'
 OBS_INSERT="INSERT INTO "+OBST+"("+RID+","+PSAT+","+PACC+","+PTECH+","+DOS+\
-","+CHOZ+","+CVERT+","+TSTMP+","+AZI+","+PTH+","+RLL+","+TEMP+","+PRESS+\
-") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+","+CHOZ+","+CVERT+","+TSTMP+","+AZI+","+PTH+","+RLL+","+TEMP+","+PRESS+","+GEO+\
+") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
 
 #Observation group table
 OID='oid'
 NT='note'
-GEO='geom'
+
 OBSGP_INSERT="INSERT INTO "+OBSGP+"("+OID+","+NT+\
         ","+TSTMP+","+GEO+\
         ") VALUES (%s,%s,%s,%s);"
@@ -162,7 +163,7 @@ def export(path):
           	    viewAngle=prop[VA]
 		    compass=prop[COMPASS]        
                     img.append(Img(prop[RIDENT],prop[FNAME],prop[TIMES],prop[ACC],viewAngle[VER],viewAngle[HOR],\
-                    compass[AZIMUTH],compass[PITCH],compass[ROLL],prop[LS],coord[0],coord[1],mkX,mkY,polyline,temperature,pressure))
+                    compass[AZIMUTH],compass[PITCH],compass[ROLL],prop[LS],coord[0],coord[0],mkX,mkY,polyline,temperature,pressure))
             else:
                 for crd in coord[0]:
                     lat=crd[0]
@@ -232,7 +233,7 @@ def export(path):
         exMsg=traceback.format_exc()
         log.exception("Exception: "+exMsg)
         #return  {"error":1 , "msg": exMsg}
-        return  {"error":1 , "msg": str(e)}
+        return  {"test error":1 , "msg": str(e)}
         
 
     return { "error":0,"msg":"Operation successful"}
@@ -269,17 +270,16 @@ class Img:
         	nSat=self.ls[self.ls.index('(')+1:self.ls.index(')')]
         
 
-	
+        ipoint=ppygis.Point(self.lat, self.lon)
+        ipoint.srid=SRID	
         print self.rid
         cursor.execute(OBS_INSERT,\
-        (self.rid,nSat,self.acc,self.ls,osver,self.vah,self.vav,self.ts,self.azi,self.pth,self.rll,self.temp,self.press))
+        (self.rid,nSat,self.acc,self.ls,osver,self.vah,self.vav,self.ts,self.azi,self.pth,self.rll,self.temp,self.press,ipoint))
         
         
         mk=str(self.mkX)+' '+str(self.mkY)
         
            
-        ipoint=ppygis.Point(self.lat, self.lon)
-        ipoint.srid=SRID
         
         imURL=ipA+self.fn
 	print imURL
