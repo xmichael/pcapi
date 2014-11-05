@@ -191,7 +191,7 @@ def export(path):
         log.debug("Connected!\n")
        
       
-        point=ppygis.Point(plat, plon)
+        point=ppygis.Point(plon, plat)
         point.srid=SRID
 
 		#OID+","+NT+\
@@ -199,7 +199,7 @@ def export(path):
         cursor.execute(OBSGP_INSERT,\
         (oid,note,timeSt,point))
        
-	ipA=ipaddr('eth0')+"/fs/local/"+path[0:path.rindex('/')+1]
+	ipA=ipaddr('eth0')+config.get("imgurl","iurl")+path[0:path.rindex('/')+1]
 
 	
         for image in img:
@@ -270,7 +270,7 @@ class Img:
         	nSat=self.ls[self.ls.index('(')+1:self.ls.index(')')]
         
 
-        ipoint=ppygis.Point(self.lat, self.lon)
+        ipoint=ppygis.Point(self.lon, self.lat)
         ipoint.srid=SRID	
         print self.rid
         cursor.execute(OBS_INSERT,\
