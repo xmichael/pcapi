@@ -75,7 +75,7 @@ class TestAuthoringTool(unittest.TestCase):
         self.assertEquals(resp["error"], 0 )
         # Contents of /editors/ should be the "/editors/test.edtr" (always receives absolute paths)
         resp = app.get('/fs/{0}/{1}/editors'.format(provider,userid) ).json
-        print `resp`
+        #print `resp`
         self.assertTrue("/editors/test.edtr" in resp["metadata"])
 
 
@@ -129,21 +129,21 @@ class TestAuthoringTool(unittest.TestCase):
         # put first file at /lev1/lev2 with content: "Hello World!\n"
         #print "test_get_file"
         contents = "Hello World!\n"
-        url='/fs/{0}/{1}/lev1/lev2'.format(provider,userid)
+        url='/fs/{0}/{1}/lev1/lev2 with spaces'.format(provider,userid)
         resp = app.put(url, params=contents ).json
         self.assertEquals(resp["error"], 0 )
         # Contents of GET should be the same
-        resp = app.get('/fs/{0}/{1}/lev1/lev2'.format(provider,userid) )
+        resp = app.get('/fs/{0}/{1}/lev1/lev2 with spaces'.format(provider,userid) )
         self.assertEquals(resp.body , contents)
 
     def test_delete_file(self):
         """ DELETE on /fs/ path deletes the file or directory """
         #print "test_delete_file"
         # put first file at /lev1/lev2
-        resp = app.put('/fs/{0}/%s/lev1/lev2' % userid, params=localfile.read() ).json
+        resp = app.put('/fs/{0}/{1}/lev1/lev2'.format(provider,userid), params=localfile.read() ).json
         self.assertEquals(resp["error"], 0 )
         # Now delete it
-        resp = app.delete('/fs/{0}/%s/lev1/lev2' % userid ).json
+        resp = app.delete('/fs/{0}/{1}/lev1/lev2'.format(provider,userid) ).json
         self.assertEquals(resp["error"], 0 )
 
     def test_create_sync(self):
@@ -153,7 +153,7 @@ class TestAuthoringTool(unittest.TestCase):
         app.delete(url).json
         # get cursor
         cur_resp = app.get('/sync/{0}/{1}'.format(provider,userid)).json
-        print "cursor is " + `cur_resp`
+        #print "cursor is " + `cur_resp`
         #create new record
         url = '/records/{0}/{1}/myrecord'.format(provider,userid)
         put_resp = app.post(url, params=localfile.read() ).json

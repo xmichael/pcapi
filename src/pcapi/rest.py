@@ -334,6 +334,9 @@ class PCAPIRest(object):
                     when record contents should be updated if there is a name
                     conflict.
         """
+        #url unquote does not happend automatically
+        path = urllib2.unquote(path)
+        
         log.debug('fs( %s, %s, %s, %s, %s)' % (provider, userid, path, process, frmt) )
 
         #TODO: make a ProviderFactory class once we have >2 providers
