@@ -163,7 +163,7 @@ def export(path):
           	    viewAngle=prop[VA]
 		    compass=prop[COMPASS]        
                     img.append(Img(prop[RIDENT],prop[FNAME],prop[TIMES],prop[ACC],viewAngle[VER],viewAngle[HOR],\
-                    compass[AZIMUTH],compass[PITCH],compass[ROLL],prop[LS],coord[0],coord[0],mkX,mkY,polyline,temperature,pressure))
+                    compass[AZIMUTH],compass[PITCH],compass[ROLL],prop[LS],coord[0],coord[1],mkX,mkY,polyline,temperature,pressure))
             else:
                 for crd in coord[0]:
                     lat=crd[0]
