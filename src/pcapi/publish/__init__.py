@@ -1,1 +1,1 @@
-__all__ = ["postgis",]
+__all__ = ["postgis","mapping"]

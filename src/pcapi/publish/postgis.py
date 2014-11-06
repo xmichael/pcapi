@@ -10,8 +10,13 @@ db.
 """
 
 ### Initialization code ###
+import os
+
 import psycopg2
 import psycopg2.extensions
+
+from pcapi.fs_provider import FsProvider
+from pcapi.publish import mapping
 
 # Needed for transparent unicode support
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
@@ -64,16 +69,18 @@ def execute(sql, args=()):
             rows = res
             columns = [ x[0] for x in cur.description ]
         except psycopg2.ProgrammingError:
-           #Thrown when there is no result (go figure)
-           rows = None
-           columns = None
+            #Thrown when there is no result (go figure)
+            rows = None
+            columns = None
         status = cur.statusmessage
     return { "columns": columns, "rows": rows, "status": status }
 
+######## High Level Record Functions #########
+
 def put_record(provider, userid, path):
     """
-    Will create a postgis representation of record by using UUID_EDITOR as
-    name of the table and record as a row. If the table does not exist, it will be created.
+    Will create a postgis representation of record by using "Session ID" (taken from SID.edtr) as
+    name of the table and record contents/assets as a row. If the table does not exist, it will be created.
     
     Normally we should have used UUID for each table and EDITOR as a column,
     however geoserver seems to only support the-whole-table as a Layer... hence the
@@ -86,7 +93,38 @@ def put_record(provider, userid, path):
         False: Error -- see logs
     """
     log.debug("Postgis INSERT: %s , %s , %s" % (provider, userid, path))
-    return True
+    ## Fetch Record file using userid and fsprovider
+    record_path = FsProvider(userid).realpath(path)
+    with open(os.path.join(record_path,"record.json")) as f:
+        record_data = f.read()
+        ## Create mapping
+        fields = mapping.mapping(record_data,userid)
+        
+    table = fields[0] # table is whitelisted as psycopg does not allow table escaping
+    ddl= fields[1] # columns are also whitelisted as psycopg... column escaping
+    dml=tuple(fields[2]) # tuples are necessary to make scheme-like expansions
+    
+    # This is necessary because of psycopg2 escape limitations for functions like ST_Xxx
+    query = "INSERT INTO {0} VALUES ({1} ST_GeomFromText(%s,4326) ) RETURNING true;".format(table, \
+        "%s, "* (len(dml)-1) )
+    try:
+
+        res = execute(query,dml)
+        res = res["status"] if res.has_key("status") else `res`
+        # table exists        
+    except psycopg2.ProgrammingError:
+        # table does not exist
+        con.rollback() # necessary after failures
+        log.info("Table {0} does not exist. Creating...".format(table))
+        create_query = "CREATE TABLE IF NOT EXISTS {0} ({1});".format(table, ", ".join(ddl))        
+        res = execute(create_query)
+        geo_query = "SELECT AddGeometryColumn( '{0}', 'geom', 4326, 'POINT', 2 )".format(table)
+        res2 = execute(geo_query)
+        # insert again
+        res3 = execute(query,dml)
+        res = "{0} {1}".format(res["status"], res2["status"], res3["status"] )
+        print res # join status messages of CREATE and INSERT
+    return { "error":0, "message": res } 
 
 def delete_record(provider, userid, path):
     """
@@ -106,7 +144,7 @@ def delete_record(provider, userid, path):
 
 def table_exists(tablename):
     """ Returns True if table exists else False """
-    # stub
+    # no needed. Better use exceptions.
     res = execute("SELECT EXISTS( SELECT * FROM information_schema.tables WHERE table_name = %s )", (tablename,))
     return res["rows"][0][0]
 
