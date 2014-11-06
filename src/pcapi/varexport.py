@@ -168,7 +168,7 @@ def export(path):
                 for crd in coord[0]:
                     lat=crd[0]
                     lon=crd[1]
-                    polyCoord.append(ppygis.Point(lat, lon))   
+                    polyCoord.append(ppygis.Point(lon, lat))   
    
         fcProp=geojflood[PROP]
         note=fcProp[NOTE]
