@@ -1,0 +1,63 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -3.181469371956379,
+      55.93604201799814
+    ]
+  },
+  "properties": {
+    "editor": "anonsurvey.edtr",
+    "fields": [
+      {
+        "id": "fieldcontain-select-1",
+        "val": "FGB",
+        "label": "Source"
+      },
+      {
+        "id": "fieldcontain-text-2",
+        "val": "hhn",
+        "label": "Species"
+      },
+      {
+        "id": "fieldcontain-text-3",
+        "val": "hhb",
+        "label": "Taxon_Group"
+      },
+      {
+        "id": "fieldcontain-select-2",
+        "val": "Coed Ty Gwyn",
+        "label": "Site name"
+      },
+      {
+        "id": "fieldcontain-text-4",
+        "val": "ghh",
+        "label": "Grid Ref"
+      },
+      {
+        "id": "fieldcontain-select-3",
+        "val": "Michael",
+        "label": "Author"
+      },
+      {
+        "id": "fieldcontain-image-1",
+        "val": "1415295623251.jpg",
+        "label": "Capture"
+      }
+    ],
+    "pos_sat": "",
+    "pos_acc": 30,
+    "pos_tech": "",
+    "dev_os": "",
+    "cam_hoz": "",
+    "cam_vert": "",
+    "comp_bar": "",
+    "temp": "",
+    "press": "",
+    "dtree": [],
+    "timestamp": "2014-11-06T17:40:30.409Z"
+  },
+  "name": "hhhs",
+  "id": "_24pg6beu7"
+}

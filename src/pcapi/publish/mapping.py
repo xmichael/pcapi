@@ -25,7 +25,7 @@ def mapping(js_rec,userid):
     dml.append(rec["properties"]["timestamp"])    
     for p in rec["properties"]["fields"]:
         # assuming all are TEXT for now
-        ddl.append("%s TEXT" % whitelist_column(p["label"]))
+        ddl.append('"%s" TEXT' % whitelist_column(p["label"]))
         # assuming verbatim value
         dml.append(p["val"])
     ## Add mandatory QA values
