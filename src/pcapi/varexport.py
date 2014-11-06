@@ -163,17 +163,18 @@ def export(path):
           	    viewAngle=prop[VA]
 		    compass=prop[COMPASS]        
                     img.append(Img(prop[RIDENT],prop[FNAME],prop[TIMES],prop[ACC],viewAngle[VER],viewAngle[HOR],\
-                    compass[AZIMUTH],compass[PITCH],compass[ROLL],prop[LS],coord[0],coord[0],mkX,mkY,polyline,temperature,pressure))
+                    compass[AZIMUTH],compass[PITCH],compass[ROLL],prop[LS],coord[0],coord[1],mkX,mkY,polyline,temperature,pressure))
             else:
                 for crd in coord[0]:
                     lat=crd[0]
                     lon=crd[1]
-                    polyCoord.append(ppygis.Point(lat, lon))   
+                    polyCoord.append(ppygis.Point(lon, lat))   
    
         fcProp=geojflood[PROP]
         note=fcProp[NOTE]
         oid=path[path.rindex('/')+1:path.rindex('.')]
-        userid=oid[0:oid.rindex('_')]
+        userid=path[0:path.index('/')]
+	
         osver=fcProp[OSV]
   
         dec=fcProp[DEC]
@@ -191,7 +192,7 @@ def export(path):
         log.debug("Connected!\n")
        
       
-        point=ppygis.Point(plat, plon)
+        point=ppygis.Point(plon, plat)
         point.srid=SRID
 
 		#OID+","+NT+\
@@ -199,7 +200,7 @@ def export(path):
         cursor.execute(OBSGP_INSERT,\
         (oid,note,timeSt,point))
        
-	ipA=ipaddr('eth0')+"/fs/local/"+path[0:path.rindex('/')+1]
+	ipA=ipaddr('eth0')+config.get("imgurl","iurl")+path[0:path.rindex('/')+1]
 
 	
         for image in img:
@@ -233,7 +234,7 @@ def export(path):
         exMsg=traceback.format_exc()
         log.exception("Exception: "+exMsg)
         #return  {"error":1 , "msg": exMsg}
-        return  {"test error":1 , "msg": str(e)}
+        return  {"error":1 , "msg": str(e)}
         
 
     return { "error":0,"msg":"Operation successful"}
@@ -270,7 +271,7 @@ class Img:
         	nSat=self.ls[self.ls.index('(')+1:self.ls.index(')')]
         
 
-        ipoint=ppygis.Point(self.lat, self.lon)
+        ipoint=ppygis.Point(self.lon, self.lat)
         ipoint.srid=SRID	
         print self.rid
         cursor.execute(OBS_INSERT,\
