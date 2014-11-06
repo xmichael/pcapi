@@ -1,0 +1,67 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -3.186314948141521,
+      55.941388889923864
+    ]
+  },
+  "properties": {
+    "editor": "eo.edtr",
+    "fields": [
+      {
+        "id": "fieldcontain-textarea-1",
+        "val": "Hhh",
+        "label": "Description"
+      },
+      {
+        "id": "fieldcontain-image-1",
+        "val": "1414517099373.jpg",
+        "label": "Take"
+      }
+    ],
+    "pos_sat": "",
+    "pos_acc": 14,
+    "pos_tech": "",
+    "dev_os": "",
+    "cam_hoz": "",
+    "cam_vert": "",
+    "comp_bar": "",
+    "temp": "",
+    "press": "",
+    "dtree": [
+      {
+        "id": "root",
+        "answer": {
+          "value": "Primarly non-vegetated",
+          "id": "2.0.0"
+        }
+      },
+      {
+        "id": "2.0.0",
+        "answer": {
+          "value": "aquatic/regularly flooded",
+          "id": "2.2.0"
+        }
+      },
+      {
+        "id": "2.2.0",
+        "answer": {
+          "value": "natural waterbodies, snow, ice (primarily non-vegetated, aquatic/regularly flooded, natural waterbodies, snow, ice)",
+          "id": "2.2.2"
+        }
+      },
+      {
+        "id": "2.2.2",
+        "answer": {
+          "value": "lagoon?",
+          "id": "2.2.2.3"
+        }
+      }
+    ],
+    "timestamp": "2014-10-28T17:25:33.042Z"
+  },
+  "name": "test 2",
+  "id": "_s7p6cya6v"
+}

@@ -1,0 +1,38 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      -3.1790516550278154,
+      55.936591761403896
+    ]
+  },
+  "properties": {
+    "editor": "audio.edtr",
+    "fields": [
+      {
+        "id": "fieldcontain-textarea-1",
+        "val": "",
+        "label": "Description"
+      },
+      {
+        "id": "fieldcontain-audio-1",
+        "val": "audio113.m4a",
+        "label": "Audio"
+      }
+    ],
+    "pos_sat": "",
+    "pos_acc": 12,
+    "pos_tech": "",
+    "dev_os": "",
+    "cam_hoz": "",
+    "cam_vert": "",
+    "comp_bar": "",
+    "temp": "",
+    "press": "",
+    "dtree": [],
+    "timestamp": "2014-10-27T15:14:51.335Z"
+  },
+  "name": "test1",
+  "id": "_9vqvi15sp"
+}
