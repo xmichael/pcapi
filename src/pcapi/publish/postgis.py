@@ -103,9 +103,8 @@ def put_record(provider, userid, path):
     table = fields[0] # table is whitelisted as psycopg does not allow table escaping
     ddl= fields[1] # columns are also whitelisted as psycopg... column escaping
     dml=tuple(fields[2]) # tuples are necessary to make scheme-like expansions
-    
     # This is necessary because of psycopg2 escape limitations for functions like ST_Xxx
-    query = "INSERT INTO {0} VALUES ({1} ST_GeomFromText(%s,4326) ) RETURNING true;".format(table, \
+    query = 'INSERT INTO "{0}" VALUES ({1} ST_GeomFromText(%s,4326) ) RETURNING true;'.format(table, \
         "%s, "* (len(dml)-1) )
     try:
 
@@ -115,8 +114,8 @@ def put_record(provider, userid, path):
     except psycopg2.ProgrammingError:
         # table does not exist
         con.rollback() # necessary after failures
-        log.info("Table {0} does not exist. Creating...".format(table))
-        create_query = "CREATE TABLE IF NOT EXISTS {0} ({1});".format(table, ", ".join(ddl))        
+        log.info('Table "{0}" does not exist. Creating...'.format(table))
+        create_query = 'CREATE TABLE IF NOT EXISTS "{0}" ({1});'.format(table, ", ".join(ddl))        
         res = execute(create_query)
         geo_query = "SELECT AddGeometryColumn( '{0}', 'geom', 4326, 'POINT', 2 )".format(table)
         res2 = execute(geo_query)
