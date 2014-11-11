@@ -112,7 +112,7 @@ def put_record(provider, userid, path):
         res = res["status"] if res.has_key("status") else `res`
         # table exists        
     except psycopg2.ProgrammingError:
-        # table does not exist
+        ### TABLE does not exist so CREATE it ###
         con.rollback() # necessary after failures
         log.info('Table "{0}" does not exist. Creating...'.format(table))
         create_query = 'CREATE TABLE IF NOT EXISTS "{0}" ({1});'.format(table, ", ".join(ddl))        

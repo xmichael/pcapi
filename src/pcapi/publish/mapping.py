@@ -48,10 +48,15 @@ def whitelist_table(tablename):
 
 def whitelist_column(column_name):
     """ Checks if column is dodgy. Psycopg cannot escape columnnames(well done!)
-    and we must somehow blacklist suspicious input """
+    and we must somehow blacklist suspicious input 
+    
+    Furthemore, it escape space with underscores because the GML breaks when variables have spaces (well done again)
+    
+    For example "Goodbye Cruel World" would become "Goodbye_Cruel_World"
+    """
     if ( ';' in column_name ):
         raise Exception("Illegal column name: %s" % column_name)
-    return column_name
+    return column_name.replace(" ","_")
 
 
 if __name__ == "__main__":
@@ -70,7 +75,7 @@ if __name__ == "__main__":
                 {
                     "id": "fieldcontain-textarea-1",
                     "val": "",
-                    "label": "Description"
+                    "label": "Description with Space"
                     },
                 {
                     "id": "fieldcontain-audio-1",
