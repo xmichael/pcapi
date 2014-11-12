@@ -16,7 +16,7 @@ import psycopg2
 import psycopg2.extensions
 
 from pcapi.fs_provider import FsProvider
-from pcapi.publish import mapping
+from pcapi.publish import mapping, geoserver
 
 # Needed for transparent unicode support
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
@@ -122,7 +122,9 @@ def put_record(provider, userid, path):
         # insert again
         res3 = execute(query,dml)
         res = "{0} {1}".format(res["status"], res2["status"], res3["status"] )
-        print res # join status messages of CREATE and INSERT
+        log.debug(res) # join status messages of CREATE and INSERT
+        # Publish to geoserver if this is enabled in the configuration file
+        geoserver.publish("cobweb", table)
     return { "error":0, "message": res } 
 
 def delete_record(provider, userid, path):
