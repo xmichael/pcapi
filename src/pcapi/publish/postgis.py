@@ -60,6 +60,7 @@ def execute(sql, args=()):
     global con
     if not con:
         con = psycopg2.connect(conn_string)
+        con.set_session(autocommit=True)
 
     with con.cursor() as cur:
         cur.execute(sql, args)
