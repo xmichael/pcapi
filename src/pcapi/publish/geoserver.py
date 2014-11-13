@@ -74,7 +74,7 @@ def rest_request(endpoint, username, password, method, data, path):
     return res.read()
     
 
-def publish(company, identifier,url=DEFAULT_AUTHORITY_URL):
+def publish(table, company, identifier,url=DEFAULT_AUTHORITY_URL):
     """ Create a layer & authority metadata for a postgis table
     
     @param company(string): the company name to add
@@ -83,7 +83,6 @@ def publish(company, identifier,url=DEFAULT_AUTHORITY_URL):
     @param url(string): the name of a URI for the company. Can be "http://SOME_URI"
     @returns : the XML string
 """
-    table = identifier
     log.debug("Publishing {0} as {1} and url {2}".format(COMPANY,identifier,url))
     if ( config.get("geoserver","enable") == "true"):
         endpoint = config.get("geoserver","endpoint")

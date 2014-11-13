@@ -101,9 +101,10 @@ def put_record(provider, userid, path):
         ## Create mapping
         fields = mapping.mapping(record_data,userid)
         
-    table = fields[0] # table is whitelisted as psycopg does not allow table escaping
+    sid = fields[0] # table is whitelisted as psycopg does not allow table escaping
     ddl= fields[1] # columns are also whitelisted as psycopg... column escaping
     dml=tuple(fields[2]) # tuples are necessary to make scheme-like expansions
+    table = "sid-" + sid # prefix "sid-" because numbers breaks WFS
     # This is necessary because of psycopg2 escape limitations for functions like ST_Xxx
     query = 'INSERT INTO "{0}" VALUES ({1} ST_GeomFromText(%s,4326) ) RETURNING true;'.format(table, \
         "%s, "* (len(dml)-1) )
@@ -125,7 +126,7 @@ def put_record(provider, userid, path):
         res = "{0} {1}".format(res["status"], res2["status"], res3["status"] )
         log.debug(res) # join status messages of CREATE and INSERT
         # Publish to geoserver if this is enabled in the configuration file
-        geoserver.publish("cobweb", table)
+        geoserver.publish(table, "cobweb", sid)
     return { "error":0, "message": res } 
 
 def delete_record(provider, userid, path):
