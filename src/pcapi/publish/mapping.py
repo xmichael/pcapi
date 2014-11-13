@@ -50,12 +50,17 @@ def whitelist_column(column_name):
     """ Checks if column is dodgy. Psycopg cannot escape columnnames(well done!)
     and we must somehow blacklist suspicious input 
     
-    Furthemore, it escape space with underscores because the GML breaks when variables have spaces (well done again)
+    Furthemore, it escape space with underscores because the GML breaks when 
+    variables have spaces (well done again) e.g. "Goodbye Cruel World" would 
+    become "Goodbye_Cruel_World"
     
-    For example "Goodbye Cruel World" would become "Goodbye_Cruel_World"
+    Moreover (will this ever end?) COBwEB's QA will crash when certain exotic
+    names like "name" are used so quote them e.g. name -> QA_name
     """
     if ( ';' in column_name ):
         raise Exception("Illegal column name: %s" % column_name)
+    if column_name == "name":
+        return "QA_name"
     return column_name.replace(" ","_")
 
 
