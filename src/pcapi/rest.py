@@ -234,7 +234,7 @@ class PCAPIRest(object):
                     ## NOTE: Put is *not* currently used by FTOPEN
                     res = self.fs(provider, userid, path)
                     if res['error'] == 0 and ogc_sync:
-                        postgis.put_record(provider, userid, res["path"])
+                        return { "error":1, "msg":"ogc_sync is not supported for PUT. Use GET after uploading the record/assets the normal way"}
                     return res
                 if self.request.method == "POST":
                     ## We are in depth 1. Create directory (or rename directory) and then upload record.json
@@ -256,8 +256,9 @@ class PCAPIRest(object):
 
                     # Sync to PostGIS database after processing with self.fs()
                     # (Path resolution already done for us so we can just put/overwrite the file)
+                    # --- disabled as we assuming ftOpen issues GET request with ?ogc_sync=true *after* uploading the record
                     if res['error'] == 0 and ogc_sync:
-                        postgis.put_record(provider, userid, res["path"])
+                        return { "error":1, "msg":res['msg'] + " -- NOTE: ogc_sync is not supported for POST. Use GET after uploading the record/assets the normal way"}
                     return res
                 if self.request.method == "DELETE":
                     ### DELETE refers to /fs/ directories
@@ -273,6 +274,11 @@ class PCAPIRest(object):
                         self.provider.mkdir("/records")
                     ### GET /recordname returns /recordname/record.json
                     if recordname_lst[0] != "":
+                        ### !!! ogc_sync publishes records to database and returns status
+                        if ogc_sync:
+                            res = postgis.put_record(provider, userid, path)
+                            return res
+                        ###
                         return self.fs(provider,userid,path + "/record.json")
                     ### Process all filters one by one and return the result
                     filters = flt.split(",") if flt else []
