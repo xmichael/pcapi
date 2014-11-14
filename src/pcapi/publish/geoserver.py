@@ -89,7 +89,7 @@ def publish(table, company, identifier,url=DEFAULT_AUTHORITY_URL):
         username = config.get("geoserver","username")
         password = config.get("geoserver","password")
 
-        data = message_add_layer(identifier)
+        data = message_add_layer(table)
         msg = rest_request(endpoint, username, password, "POST", data, ADD_LAYER_PATH)
         log.debug("Geoserver add layer reponse: %s" % msg)
         data = message_authority("cobweb",identifier,url)
