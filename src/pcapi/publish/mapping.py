@@ -17,7 +17,7 @@ def mapping(js_rec,userid):
     tname = whitelist_table(tname)
     ## DDL for creatign table
     ddl = ["userid TEXT",]
-    ddl.append("name TEXT")
+    ddl.append("QA_name TEXT") # Use QA_name instead of name to avoid breaking QA WPS
     ddl.append("timestamp TEXT")    
     ## DML for field properties
     dml = [userid,]
@@ -55,12 +55,18 @@ def whitelist_column(column_name):
     become "Goodbye_Cruel_World"
     
     Moreover (will this ever end?) COBwEB's QA will crash when certain exotic
-    names like "name" are used so quote them e.g. name -> QA_name
+    names like "description" are used so quote them e.g. description -> QA_description
     """
     if ( ';' in column_name ):
         raise Exception("Illegal column name: %s" % column_name)
-    if column_name == "name":
-        return "QA_name"
+    if column_name == "description":
+        return "QA_description"
+    if column_name == "location":
+        return "QA_location"
+    if column_name == "metaDataProperty":
+        return "QA_metaDataProperty"
+    if column_name == "boundedBy":
+        return "QA_boundedBy"
     return column_name.replace(" ","_")
 
 
