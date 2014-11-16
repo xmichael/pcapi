@@ -80,8 +80,9 @@ def execute(sql, args=()):
 
 def put_record(provider, userid, path):
     """
-    Will create a postgis representation of record by using "Session ID" (taken from SID.edtr) as
-    name of the table and record contents/assets as a row. If the table does not exist, it will be created.
+    Will create a postgis representation of record by using "Session ID" (taken 
+    from SID.edtr) as name of the table and record contents/assets as a row. If 
+    the table does not exist, it will be created.
     
     Normally we should have used UUID for each table and EDITOR as a column,
     however geoserver seems to only support the-whole-table as a Layer... hence the
@@ -109,7 +110,6 @@ def put_record(provider, userid, path):
     query = 'INSERT INTO "{0}" VALUES ({1} ST_GeomFromText(%s,4326) ) RETURNING true;'.format(table, \
         "%s, "* (len(dml)-1) )
     try:
-
         res = execute(query,dml)
         res = res["status"] if res.has_key("status") else `res`
         # table exists        
@@ -117,13 +117,19 @@ def put_record(provider, userid, path):
         ### TABLE does not exist so CREATE it ###
         con.rollback() # necessary after failures
         log.info('Table "{0}" does not exist. Creating...'.format(table))
-        create_query = 'CREATE TABLE IF NOT EXISTS "{0}" ({1});'.format(table, ", ".join(ddl))        
-        res = execute(create_query)
-        geo_query = "SELECT AddGeometryColumn( '{0}', 'geom', 4326, 'POINT', 2 )".format(table)
-        res2 = execute(geo_query)
-        # insert again
+        try:
+            create_query = 'CREATE TABLE IF NOT EXISTS "{0}" ({1});'.format(table, ", ".join(ddl))
+            res = execute(create_query)
+            geo_query = "SELECT AddGeometryColumn( '{0}', 'geom', 4326, 'POINT', 2 )".format(table)
+            res2 = execute(geo_query)
+        ### Sometimes many threads try to create the table for the "first time"so ignore them,
+        except psycopg2.IntegrityError:
+            log.debug("Caught race condition: more than 1 thread trying to create database")
+            log.debug("Ignoring extra CREATE calls")
+            con.rollback() # rollback not necessary as we use "autocommit" but good to have.
+        ### INSERT again, now with a table
         res3 = execute(query,dml)
-        res = "{0} {1}".format(res["status"], res2["status"], res3["status"] )
+        res = "{0} {1} {2}".format(res["status"], res2["status"], res3["status"] )
         log.debug(res) # join status messages of CREATE and INSERT
         # Publish to geoserver if this is enabled in the configuration file
         geoserver.publish(table, "cobweb", sid)
