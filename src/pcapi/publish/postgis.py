@@ -128,7 +128,7 @@ def put_record(provider, userid, path):
             geo_query = "SELECT AddGeometryColumn( '{0}', 'geom', 4326, 'POINT', 2 )".format(table)
             res2 = execute(geo_query)
         ### Sometimes many threads try to create the table for the "first time"so ignore them,
-        except psycopg2.IntegrityError:
+        except (psycopg2.IntegrityError, psycopg2.ProgrammingError):
             log.debug("Caught race condition: more than 1 thread trying to create database")
             log.debug("Ignoring extra CREATE calls")
             con.rollback() # rollback not necessary as we use "autocommit" but good to have.
