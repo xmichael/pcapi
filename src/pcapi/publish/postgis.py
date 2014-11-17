@@ -106,6 +106,11 @@ def put_record(provider, userid, path):
     ddl= fields[1] # columns are also whitelisted as psycopg... column escaping
     dml=tuple(fields[2]) # tuples are necessary to make scheme-like expansions
     table = "sid-" + sid # prefix "sid-" because numbers breaks WFS
+    
+    res = { "msg": "", "status":"", "error": 0 }
+    res2 = res
+    res3 = res    
+    
     # This is necessary because of psycopg2 escape limitations for functions like ST_Xxx
     query = 'INSERT INTO "{0}" VALUES ({1} ST_GeomFromText(%s,4326) ) RETURNING true;'.format(table, \
         "%s, "* (len(dml)-1) )
