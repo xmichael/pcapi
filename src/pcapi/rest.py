@@ -329,10 +329,10 @@ class PCAPIRest(object):
             if res["error"] == 0 and provider == "local" and self.request.method == "GET" \
             and path == "/editors//":
                 log.debug("GET /editors// call. Returning names:")
+                names = []
                 for fname in res["metadata"]:
                     try:
                         fpath = self.provider.realpath(fname)
-                        names = []
                         with open (fpath) as f:
                             parser = COBWEBFormParser(f.read())
                             names.append( parser.get_survey() )
