@@ -326,8 +326,8 @@ class PCAPIRest(object):
             res = self.fs(provider,userid,path,frmt=flt)
             
             # If "get all editors" is reguested then add a "names" parameter
-            if res["error"] == 0 and provider == "local" and self.request.method == "GET" \
-            and path == "/editors//":
+            if path == "/editors//" and res["error"] == 0 and provider == "local"\
+            and self.request.method == "GET":
                 log.debug("GET /editors// call. Returning names:")
                 names = []
                 for fname in res["metadata"]:
