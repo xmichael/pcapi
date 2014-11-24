@@ -304,6 +304,15 @@ class PCAPIRest(object):
                 return {"error":1 , "msg": str(e)}
 
     def editors(self, provider, userid, path, flt):
+        """ Normally this is just a shortcut for /fs/ calls to the /editors directory.
+        
+        As an exception, a GET request for all editors (path=/) should parse each editor and
+        return their names (s.a. documentation).
+        
+        In the future this call will be used to get all registered version if postgres
+        is enabled and registered=true is used.
+        """        
+        
         error = self.auth(provider,userid)
         if (error):
             return error
@@ -314,7 +323,27 @@ class PCAPIRest(object):
             self.provider.mkdir("/editors")
         # No subdirectories are allowed when accessing editors
         if re.findall("/editors//?[^/]*$",path):
-            return self.fs(provider,userid,path,frmt=flt)
+            res = self.fs(provider,userid,path,frmt=flt)
+            
+            # If "get all editors" is reguested then add a "names" parameter
+            if res["error"] == 0 and provider == "local" and self.request.method == "GET" \
+            and path == "/editors//":
+                log.debug("GET /editors// call. Returning names:")
+                for fname in res["metadata"]:
+                    try:
+                        fpath = self.provider.realpath(fname)
+                        names = []
+                        with open (fpath) as f:
+                            parser = COBWEBFormParser(f.read())
+                            names.append( parser.get_survey() )
+                    # Catch-all as a last resort
+                    except Exception as e:
+                        log.debug("Exception parsing %s: " % fpath + `e`)
+                        log.debug("*FALLBACK*: using undefined as name")
+                        names.append("undefined")
+                log.debug(`names`)
+                res["names"] = names
+            return res
         return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
 
     def tiles(self, provider, userid, path):

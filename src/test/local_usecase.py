@@ -28,6 +28,7 @@ editorfilepath = config.get("test", "editorfile")
 
 # this is a record file (json)
 localfile = open ( textfilepath , "r")
+editorfile = open ( editorfilepath , "r")
 
 # Application
 app = TestApp(application)
@@ -71,7 +72,8 @@ class TestAuthoringTool(unittest.TestCase):
     def test_post_editor(self):
         """  post an editor """
         url='/fs/{0}/{1}/editors/test.edtr'.format(provider,userid)
-        resp = app.post(url, params=localfile.read() ).json
+        editor = editorfile.read() 
+        resp = app.post(url, params=editor).json
         self.assertEquals(resp["error"], 0 )
         # Contents of /editors/ should be the "/editors/test.edtr" (always receives absolute paths)
         resp = app.get('/fs/{0}/{1}/editors'.format(provider,userid) ).json
@@ -82,10 +84,10 @@ class TestAuthoringTool(unittest.TestCase):
     def test_get_all_editors(self):
         """  Get all Editors """
         url='/editors/{0}/{1}/'.format(provider,userid)
-        resp = app.get(url, params=localfile.read() ).json
+        resp = app.get(url).json
         self.assertEquals(resp["error"], 0 )
         self.assertTrue("/editors//test.edtr" in resp["metadata"])
-
+        self.assertTrue("My Survey Title" in resp["names"])
     ########### GET RECORDS ###########
 
     def test_post_record(self):

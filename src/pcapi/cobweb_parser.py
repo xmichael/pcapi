@@ -9,7 +9,23 @@ class COBWEBFormParser:
         self.content = content
 
     def extract(self):
+        """ convert HTML editor form to JSON"""
         return json.dumps(self._get_dict_from_html())
+
+    def get_survey(self):
+        """ return survey name or "undefined" if none found 
+
+        NOTE: survey name should be in source html as <form data-title="Some Title">        
+        """
+        if self.content:
+            soup = BeautifulSoup(self.content, "html5lib")
+            try:
+                res = soup.form["data-title"]
+            except KeyError:
+                return "undefined"
+            return res
+        else:
+            return "undefined"
 
     def _get_dict_from_html(self):
         if self.content:
