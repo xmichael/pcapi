@@ -326,8 +326,8 @@ class PCAPIRest(object):
             res = self.fs(provider,userid,path,frmt=flt)
             
             # If "get all editors" is reguested then add a "names" parameter
-            if path == "/editors//" and res["error"] == 0 and provider == "local"\
-            and self.request.method == "GET":
+            if path == "/editors//" and res["error"] == 0 and provider == "local" \
+                and self.request.method == "GET":
                 log.debug("GET /editors// call. Returning names:")
                 names = []
                 for fname in res["metadata"]:
@@ -340,7 +340,7 @@ class PCAPIRest(object):
                     except Exception as e:
                         log.debug("Exception parsing %s: " % fpath + `e`)
                         log.debug("*FALLBACK*: using undefined as name")
-                        names.append("undefined")
+                        names.append(None)
                 log.debug(`names`)
                 res["names"] = names
             return res
