@@ -61,12 +61,12 @@ def editors(provider, userid, path="/"):
     flt = request.GET.get("format")
     return PCAPIRest(request,response).editors(provider, userid, path, flt)
 
-###  /tiles/... API ###
+###  /layers/... API ###
 
-@route('/tiles/<provider>/<userid>/',method=["GET","POST","PUT","DELETE"] )
-@route('/tiles/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE"] )
-def tiles(provider, userid, path="/"):
-    return PCAPIRest(request,response).tiles(provider, userid, path)
+@route('/layers/<provider>/<userid>/',method=["GET","POST","PUT","DELETE"] )
+@route('/layers/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE"] )
+def layers(provider, userid, path="/"):
+    return PCAPIRest(request,response).layers(provider, userid, path)
 
 ###  /fs/... API ###
 

@@ -346,14 +346,14 @@ class PCAPIRest(object):
             return res
         return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
 
-    def tiles(self, provider, userid, path):
+    def layers(self, provider, userid, path):
         error = self.auth(provider, userid)
         if (error):
             return error
 
-        path = "/tiles/" + path
+        path = "/layers/" + path
         # No subdirectories are allowed when accessing editors
-        if re.findall("/tiles//?[^/]*$",path):
+        if re.findall("/layers//?[^/]*$",path):
             return self.fs(provider,userid,path)
         return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
 
