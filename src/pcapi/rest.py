@@ -20,7 +20,7 @@ try:
 except ImportError:
     sys.stderr.write("Error: Can't find threadpool...")
 
-from pcapi import ogr, dbox_provider, fs_provider, logtool
+from pcapi import ogr, dbox_provider, fs_provider, logtool, config
 from pcapi.form_validator import FormValidator, Editor
 from pcapi.cobweb_parser import COBWEBFormParser
 from pcapi.exceptions import DBException, FsException
@@ -309,6 +309,9 @@ class PCAPIRest(object):
         As an exception, a GET request for all editors (path=/) should parse each editor and
         return their names (s.a. documentation).
         
+        When called with public=true, then PUT/POST requests will also apply to 
+        the public folder (as defined in pcapi.ini).
+
         In the future this call will be used to get all registered version if postgres
         is enabled and registered=true is used.
         """        
@@ -325,7 +328,7 @@ class PCAPIRest(object):
         if re.findall("/editors//?[^/]*$",path):
             res = self.fs(provider,userid,path,frmt=flt)
             
-            # If "get all editors" is reguested then add a "names" parameter
+            # If "GET /editors//" is reguested then add a "names" parameter
             if path == "/editors//" and res["error"] == 0 and provider == "local" \
                 and self.request.method == "GET":
                 log.debug("GET /editors// call. Returning names:")
@@ -343,18 +346,50 @@ class PCAPIRest(object):
                         names.append(None)
                 log.debug(`names`)
                 res["names"] = names
+            ## If public==true then execute the same PUT/POST command to the 
+            ## public UUID (s. pcapi.ini) and return that result
+            elif provider == "local" and \
+            ( self.request.method == "PUT" or self.request.method == "POST"):
+                try:
+                    public = self.request.GET.get("public")
+                    if public == "true":
+                        log.debug("Mirroring command to public uid: ")
+                        self.provider.copy_to_public_folder(path)
+                except Exception as e:
+                    if res.has_key("msg"):
+                        res["msg"] + "  PUBLIC_COPY: " + e.message
             return res
         return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
 
     def layers(self, provider, userid, path):
+        """ High level layer (overlay) functions. Normally it is a shortcut to 
+        /fs/ for the /layers folder.
+
+        When called with public=true, then ALL requests will also apply to 
+        the public folder (as defined in pcapi.ini).
+
+        """        
+        log.debug('layers(%s, %s, %s)' % (provider, userid, path) )
+
         error = self.auth(provider, userid)
         if (error):
             return error
 
         path = "/layers/" + path
-        # No subdirectories are allowed when accessing editors
+        # No subdirectories are allowed when accessing layers
         if re.findall("/layers//?[^/]*$",path):
-            return self.fs(provider,userid,path)
+            res = self.fs(provider,userid,path)
+            ## If public==true then execute the same command to the 
+            ## public UUID (s. pcapi.ini) and return that result
+            try:
+                public = self.request.GET.get("public")
+                if public == "true":
+                    log.debug("Mirroring command to public uid: ")
+                    self.provider.copy_to_public_folder(path)
+            except Exception as e:
+                if res.has_key("msg"):
+                    res["msg"] + "  PUBLIC_COPY: " + e.message
+            return res
         return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
 
     def fs(self, provider, userid, path, process=None, frmt=None):

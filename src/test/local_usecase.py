@@ -26,8 +26,9 @@ textfilepath = config.get("test", "testfile")
 imagefilepath = config.get("test", "imagefile")
 editorfilepath = config.get("test", "editorfile")
 
-# this is a record file (json)
+# a record file (json)
 localfile = open ( textfilepath , "r")
+# am editor file (html5)
 editorfile = open ( editorfilepath , "r")
 
 # Application
@@ -63,8 +64,8 @@ class TestAuthoringTool(unittest.TestCase):
 
         /sync/local/testemail@domain.com/123456789
 
-    Post mbtiles (POST):
-        /tiles/local/testemail@domain.com/dyfi.mbtiles
+    Post mbtiles/kml (POST):
+        /layers/local/testemail@domain.com/dyfi.mbtiles
     """
     ########### GET EDITORS ###########
 
@@ -164,3 +165,21 @@ class TestAuthoringTool(unittest.TestCase):
         url = '/sync/{0}/{1}/{2}'.format(provider,userid,cur_resp["cursor"])
         diff_resp = app.get(url).json
         self.assertEquals( diff_resp["updated"] , [u'/records/myrecord/record.json'] )
+
+    #@unittest.skip("skipping setup")
+    def test_public_editors_layers(self):
+        """  Put an overlay and an editor with public=true and see if they are copied
+        over to the public folder"""
+        
+        # create public layer mylayer.
+        layer = localfile.read()
+        # NOTE: public=true
+        url='/layers/{0}/{1}/mylayer.kml?public=true'.format(provider,userid)
+        resp = app.put(url, params=layer).json
+        print `resp`
+        self.assertEquals(resp["error"], 0 )
+        ## The same with editor
+        editor = editorfile.read()
+        # NOTE: public=true
+        url='/editors/{0}/{1}/mylayer.kml?public=true'.format(provider,userid)
+        resp = app.put(url, params=editor).json
