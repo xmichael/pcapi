@@ -26,8 +26,13 @@ def mapping(js_rec,userid):
     for p in rec["properties"]["fields"]:
         # assuming all are TEXT for now
         ddl.append('"%s" TEXT' % whitelist_column(p["label"]))
-        # assuming verbatim value
-        dml.append(p["val"])
+        # convert images to relative URLs
+        if p["id"].startswith("fieldcontain-image-"):
+            value = "{0}/records/{1}/{2}".format(userid, rec["name"], p["val"])
+        else:
+            # assuming verbatim value
+            value = p["val"]
+        dml.append(value)
     ## Add mandatory QA values
     ddl.append("pos_acc REAL")
     dml.append(rec["properties"]["pos_acc"])
