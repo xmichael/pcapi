@@ -61,6 +61,13 @@ def editors(provider, userid, path="/"):
     flt = request.GET.get("format")
     return PCAPIRest(request,response).editors(provider, userid, path, flt)
 
+###  /surveys/... API ###
+
+@route('/surveys/<provider>/<userid>',method=["GET","POST","PUT","DELETE","OPTIONS"] )
+@route('/surveys/<provider>/<userid>/<survey>',method=["GET","POST","PUT","DELETE","OPTIONS"] )
+def surveys(provider, userid, survey=None):
+    return PCAPIRest(request,response).surveys(provider, userid, survey)
+
 ###  /layers/... API ###
 
 @route('/layers/<provider>/<userid>/',method=["GET","POST","PUT","DELETE"] )

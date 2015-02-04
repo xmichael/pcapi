@@ -6,6 +6,72 @@ from pcapi import config, logtool
 
 log = logtool.getLogger("geoserver", "pcapi.publish")
 
+class Surveys:
+    # raw surveys resposne from geonetwork
+    _surveys = {}
+    # parsed summary of _surveys as an array of
+    # [ {"sid", "coordinator", "title"} ...
+    _summary = []
+    # number of surveys
+    
+    def __init__ (self, surveys):
+        """ API to access the contents of the geonetwork response """
+        #store raw surveys
+        self._surveys = surveys
+
+        # create a summary of surveys as an array of [ sid, coordinator uid, title ]
+        self.count = int(self._surveys["summary"]["@count"])
+        if self.count == 0:
+            return # empty surveys -- no point
+        if self.count == 1: # geonetwork bug -- object instead of array for count==1
+            s = self._surveys["metadata"]
+            self._summary =  [ \
+                { "sid": s["geonet:info"]["uuid"], 
+                  "coordinator" : s["userinfo"].split('|')[0], 
+                  "title" : s["title"] } ,]
+        if self.count > 1:
+            for s in self._surveys["metadata"]:
+                self._summary.append( { "sid": s["geonet:info"]["uuid"],
+                  "coordinator" : s["userinfo"].split('|')[0],
+                  "title" : s["title"] })
+        
+    def get_summary(self):
+        """ Return     # parsed summary of _surveys as an array of
+        [ {"sid", "coordinator", "title"} ... 
+        """
+        return self._summary
+        
+    def get_raw_surveys(self):
+        """ return the parsed geoserver resposne """
+        return self._surveys
+    
+    def get_survey(self, sid):
+        """ @returns
+                {"coordinator", "title"} of survey
+                None: survey id not found
+        """
+        for s in self._summary:
+            if s["sid"] == sid:
+                return { "coordinator" : s["coordinator"] , "title": s["title"] }
+        return None
+
+    def get_summary_ftopen(self):
+        """return summary in a format appropriate for FTOpen i.e.
+        {
+            "metadata": [ "b29c63ae-adc6-4732", "c8942133-22ce-4f93" ],
+            "names": ["Another Woodlands Survey", "Grassland survey"]
+        }
+        """
+        metadata = []
+        names = []
+        log.debug("symmary is:")
+        log.debug(logtool.pp(self._summary))
+        if (self.count == 0):
+            return { "msg" : "No surveys found", "error" : 1}
+        for s in self._summary:
+            metadata.append(s["sid"])
+            names.append(s["title"])
+        return { "metadata": metadata , "names": names , "error": 0}
 
 def msg_get_surveys(uid):
     """ Create the get request for fetching all surveys a users is registered for. 
@@ -56,7 +122,7 @@ def get_request(endpoint, username, password, path):
 def get_surveys(uid):
     """ fetching all surveys a users is registered for. 
     @param uid(string): the SAML UUID of the user
-    @returns : the surveys as a dictionary
+    @returns : A class that represents all the surveys found or None
     """
     log.debug("Quering surveys for {0}".format(uid))
     endpoint = config.get("geonetwork","endpoint")
@@ -67,11 +133,8 @@ def get_surveys(uid):
     resj = get_request(endpoint, username, password, msg)
     res = json.loads(resj)
 
-    surveys = []
-    for s in res["metadata"]:
-        surveys.append([ s["source"], s["userinfo"], s["title"] ])
-    return surveys
-
+    return Surveys(res)
+    
 if __name__ == "__main__":
     """USAGE: ./geonetwork.py UUID """
     import sys
@@ -84,15 +147,10 @@ if __name__ == "__main__":
     log.debug = dbg
 
     uid = sys.argv[1]
-    create_msg = msg_get_surveys(uid)
-    endpoint = config.get("geonetwork","endpoint")
-    username = config.get("geonetwork","username")
-    password = config.get("geonetwork","password")
-    msg = msg_get_surveys(uid)
-    resj = get_request(endpoint, username, password, msg)
-    res = json.loads(resj)
-    print "Parsed resposne was:"
-    print(logtool.pp(res))
-    surveys = get_surveys(uid)
+    all_surveys = get_surveys(uid)
+    print "Original response:"
+    print logtool.pp(all_surveys.get_raw_surveys())
     print "Parsed surveys are:"
-    print(logtool.pp(surveys))
+    print logtool.pp(all_surveys.get_summary())
+    print "FTOpen format:"
+    print logtool.pp(all_surveys.get_summary_ftopen())

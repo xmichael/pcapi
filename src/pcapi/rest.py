@@ -24,7 +24,7 @@ from pcapi import ogr, dbox_provider, fs_provider, logtool, config
 from pcapi.form_validator import FormValidator, Editor
 from pcapi.cobweb_parser import COBWEBFormParser
 from pcapi.exceptions import DBException, FsException
-from pcapi.publish import postgis
+from pcapi.publish import postgis, geonetwork
 
 log = logtool.getLogger("PCAPIRest", "pcapi")
 #global number of threads
@@ -303,18 +303,50 @@ class PCAPIRest(object):
                 log.exception("Exception: " + str(e))
                 return {"error":1 , "msg": str(e)}
 
+    def surveys(self, provider, userid, sid):
+        """ This is the new version of editors API for COBWEB which will eventually 
+        replace /editors/.
+       
+        GET /surveys/local/UUID
+        A GET request for all editors (path=/) will query geonetwork and return 
+        all surveys with their names eg.
+        {
+            "metadata": [ "b29c63ae-adc6-4732", "c8942133-22ce-4f93" ],
+            "names": ["Another Woodlands Survey", "Grassland survey"]
+        }
+        
+        GET /surveys/local/UUID/SURVEYID
+        Will return the survey (editor) file contents after querying geonetwork for it
+        """
+        log.debug('survey({0}, {1}, {2})'.format(provider, userid, sid))
+
+        surveys = geonetwork.get_surveys(userid)
+        
+        if not sid:
+            # Return all registered surveys
+            return surveys.get_summary_ftopen()
+        else:
+            # Return contents of file
+            s = surveys.get_survey(sid)
+            if not s: # no survey found
+                return { "error": 1 , "msg": "User is not registered for syrvey %s" % sid}
+            res = self.fs(provider,s["coordinator"],"/editors/%s.edtr" % sid)
+            return res
+        return {"error":1, "msg":"Unexpected error" }
+
     def editors(self, provider, userid, path, flt):
         """ Normally this is just a shortcut for /fs/ calls to the /editors directory.
         
-        As an exception, a GET request for all editors (path=/) should parse each editor and
+        A GET request for all editors (path=/) should parse each editor and
         return their names (s.a. documentation).
         
         When called with public=true, then PUT/POST requests will also apply to 
         the public folder (as defined in pcapi.ini).
 
-        In the future this call will be used to get all registered version if postgres
-        is enabled and registered=true is used.
-        """        
+        In the future this call will be obsolete by surveys. We are keeping this
+        for compatibility with non-COBWEB users who don't want to depend on geonetwork,
+         SAML overrides, geoserver etc.
+        """
         
         error = self.auth(provider,userid)
         if (error):
