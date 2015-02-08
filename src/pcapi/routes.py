@@ -63,7 +63,7 @@ def editors(provider, userid, path="/"):
 
 ###  /surveys/... API ###
 
-@route('/surveys/<provider>/<userid>',method=["GET","POST","PUT","DELETE","OPTIONS"] )
+@route('/surveys/<provider>/<userid>/',method=["GET","POST","PUT","DELETE","OPTIONS"] )
 @route('/surveys/<provider>/<userid>/<survey>',method=["GET","POST","PUT","DELETE","OPTIONS"] )
 def surveys(provider, userid, survey=None):
     return PCAPIRest(request,response).surveys(provider, userid, survey)
