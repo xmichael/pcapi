@@ -352,7 +352,11 @@ class PCAPIRest(object):
         if (error):
             return error
 
+        # Convert editor name to local filesystem path
         path = "/editors/" + path
+        if (path[-1:] != '/'):
+            path = path + ".edtr"
+
         if path == "/editors//" and not self.provider.exists(path):
             log.debug("creating non-existing editors folder")
             self.provider.mkdir("/editors")
@@ -378,6 +382,10 @@ class PCAPIRest(object):
                         names.append(None)
                 log.debug(`names`)
                 res["names"] = names
+                
+                # Now remove all "/editors//XXX.edtr" and just leave the XXX in the results
+                res["metadata"] = [ re.sub(r'/editors//?(.*)\.edtr', r'\1', x) for x in res["metadata"] ]
+
             ## If public==true then execute the same PUT/POST command to the 
             ## public UUID (s. pcapi.ini) and return that result
             elif provider == "local" and \
