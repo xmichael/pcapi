@@ -10,7 +10,7 @@ import urllib2
 import time
 import zipfile
 
-from bottle import Response
+from bottle import Response, abort
 from StringIO import StringIO
 from operator import itemgetter
 from wand.image import Image
@@ -331,6 +331,9 @@ class PCAPIRest(object):
             if not s: # no survey found
                 return { "error": 1 , "msg": "User is not registered for syrvey %s" % sid}
             res = self.fs(provider,s["coordinator"],"/editors/%s.edtr" % sid)
+            # special case -- portal has survey but coordinator has not created it using Authoring Tool
+            #if isinstance(res,dict) and res["msg"].startswith("[Errno 2] No such file or"):
+            #    abort(404, "No survey found. Did you create a survey using the Authoring Tool?")
             return res
         return {"error":1, "msg":"Unexpected error" }
 
@@ -354,8 +357,6 @@ class PCAPIRest(object):
 
         # Convert editor name to local filesystem path
         path = "/editors/" + path
-        if (path[-1:] != '/'):
-            path = path + ".edtr"
 
         if path == "/editors//" and not self.provider.exists(path):
             log.debug("creating non-existing editors folder")
@@ -383,8 +384,10 @@ class PCAPIRest(object):
                 log.debug(`names`)
                 res["names"] = names
                 
-                # Now remove all "/editors//XXX.edtr" and just leave the XXX in the results
-                res["metadata"] = [ re.sub(r'/editors//?(.*)\.edtr', r'\1', x) for x in res["metadata"] ]
+                # we convert /editors//XXX.whatever as XXX.whatever
+                # TODO: when editors become json, put decision trees inside the editor file
+                # and remove all filename extensions (like in /surveys/)
+                res["metadata"] = [ re.sub(r'/editors//?(.*)', r'\1', x) for x in res["metadata"] ]
 
             ## If public==true then execute the same PUT/POST command to the 
             ## public UUID (s. pcapi.ini) and return that result
