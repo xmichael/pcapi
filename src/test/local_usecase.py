@@ -87,7 +87,7 @@ class TestAuthoringTool(unittest.TestCase):
         url='/editors/{0}/{1}/'.format(provider,userid)
         resp = app.get(url).json
         self.assertEquals(resp["error"], 0 )
-        self.assertTrue("/editors//test.edtr" in resp["metadata"])
+        self.assertTrue("test.edtr" in resp["metadata"])
         self.assertTrue("My Survey Title" in resp["names"])
     ########### GET RECORDS ###########
 
