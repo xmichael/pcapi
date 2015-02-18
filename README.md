@@ -11,7 +11,7 @@ Installation is based on the official python PIP tool. It is included in most li
 
 In short, you can install PCAPI globally, locally or within  a virtual environment just like most sane python packages. For example, to quickly download, install and execute PCAPI as a local user with no special permissions type:
 
-1. `pip install git+https://github.com/cobweb-eu/pcapi`
+1. `pip install --user git+https://github.com/cobweb-eu/pcapi`
 2. `pcapi`
 
 Advanced Configuration
