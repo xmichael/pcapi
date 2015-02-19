@@ -73,5 +73,3 @@ License
 
 [Modified BSD](./LICENSE)
 
-
-**Free Software, Hell Yeah!**
