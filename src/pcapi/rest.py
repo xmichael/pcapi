@@ -538,14 +538,14 @@ class PCAPIRest(object):
         for r in records:
             log.debug(r.content)
             for record in r.content.itervalues():
-                description = "editor: %s\n timestamp: %s\n" %(record["editor"], record["timestamp"])
-                for f in record["fields"]:
+                description = "editor: %s\n timestamp: %s\n" %(record["properties"]["editor"], record["properties"]["timestamp"])
+                for f in record["properties"]["fields"]:
                     if "fieldcontain-image" in str(f["id"]):
                         description += "%s: %s\n" % (str(f["label"]), "<img src='http://%s/1.3/pcapi/records/dropbox/%s/%s/%s' >" % (self.request.environ.get("SERVER_NAME", "NONE"), userid, record["name"], str(f["val"])))
                     else:
                         description += "%s: %s\n" % (str(f["label"]), str(f["val"]))
                 log.debug(description)
-                pnt = kml.newpoint(name=record["name"], description=description, coords=[(record["point"]["lon"], record["point"]["lat"])])
+                pnt = kml.newpoint(name=record["name"], description=description, coords=[(record["geometry"]["coordinates"][0], record["geometry"]["coordinates"][1])])
 
         return kml.kml()
 
@@ -557,12 +557,7 @@ class PCAPIRest(object):
         features = []
         for r in records:
             log.debug(r.content)
-            for record in r.content.itervalues():
-                feat = {}
-                feat["type"] = "Feature"
-                feat["geometry"] = {"type": "Point", "coordinates": [record["point"]["lon"], record["point"]["lat"]]}
-                feat["properties"] = {"fields": record["fields"], "editor": record["editor"], "name": record["name"], "timestamp": record["timestamp"]}
-                features.append(feat)
+            features.append(r)
 
         return json.dumps({"type": "FeatureCollection", "features": features})
 
@@ -603,12 +598,12 @@ class PCAPIRest(object):
                     new_records.append(record)
             results = sorted(new_records, key=itemgetter('editor'))
             for record in results:
-                if editor != record["editor"]:
-                    log.debug(record["editor"])
-                    path = "/editors/"+record["editor"]
-                    if record["editor"] == "image.edtr" or record["editor"] == "audio.edtr" or record["editor"] == "text.edtr":
-                        ed = urllib2.urlopen("http://fieldtripgb.edina.ac.uk/authoring/editors/default/"+record["editor"]).read()
-                    elif record["editor"] == "track.edtr":
+                if editor != record["properties"]["editor"]:
+                    log.debug(record["properties"]["editor"])
+                    path = "/editors/"+record["properties"]["editor"]
+                    if record["properties"]["editor"] == "image.edtr" or record["properties"]["editor"] == "audio.edtr" or record["properties"]["editor"] == "text.edtr":
+                        ed = urllib2.urlopen("http://fieldtripgb.edina.ac.uk/authoring/editors/default/"+record["properties"]["editor"]).read()
+                    elif record["properties"]["editor"] == "track.edtr":
                         ed = urllib2.urlopen("http://fieldtripgb.edina.ac.uk/authoring/editors/default/text.edtr").read()
                     else:
                         try:
@@ -620,16 +615,16 @@ class PCAPIRest(object):
                         buf.close()
                     edit = Editor(ed)
                     field_headers = edit.findElements()
-                    csv_file.writerow([record["editor"]])
+                    csv_file.writerow([record["properties"]["editor"]])
                     headers = ["Name", "Timestamp", "Longitude", "Latitude", "Altitude"]
                     for h in field_headers:
                         if h[0] != "fieldcontain-text-1":
                             headers.append(h[1])
                     i=0
                 alt = 0
-                if "alt" in record["point"]:
-                    alt = record["point"]["alt"]
-                fields = [record["name"], record["timestamp"], record["point"]["lon"], record["point"]["lat"], alt]
+                if len(record["geometry"]["coordinates"]) > 2:
+                    alt = record["geometry"]["coordinates"][2]
+                fields = [record["name"], record["properties"]["timestamp"], record["geometry"]["coordinates"][0], record["geometry"]["coordinates"][1], alt]
 
                 ## TODO: Remove those ugly ad-hoc checks. The Mobile app should submit records with same length and at the same order.
                 all_fields = [ x[0] for x in field_headers ]
@@ -641,7 +636,7 @@ class PCAPIRest(object):
 
                     found_field_value = False
                     # check if field exists in record
-                    for f in record["fields"]:
+                    for f in record["properties"]["fields"]:
                         if str(f["id"]) == field:
                             #bingo
                             found_field_value = True
@@ -661,7 +656,7 @@ class PCAPIRest(object):
                     csv_file.writerow(headers)
 
                 csv_file.writerow(fields)
-                editor = record["editor"]
+                editor = record["properties"]["editor"]
                 i = i+1
         file.close()
         f = open(temp.name, "r")
