@@ -8,7 +8,7 @@ from pcapi import config, logtool
 log = logtool.getLogger("geoserver", "pcapi.publish")
 
 ### Constants -- should be the same in all geoserver installations
-# Assuming workspace and datastore are Cobweb as we don't expect to use this feature externally
+# Assuming workspace and datastore are cobweb as we don't expect to use this feature externally
 ADD_LAYER_PATH = '/rest/workspaces/cobweb/datastores/cobweb/featuretypes'
 PUBLISH_LAYER_PATH_TPL = '/rest/layers/cobweb:{0}'
 COMPANY = 'cobweb'
@@ -16,7 +16,7 @@ DEFAULT_AUTHORITY_URL = "http://authority.cobwebproject.eu"
 # Realm is used by Basic Auth in Geoserver
 REALM = 'GeoServer Realm'
 
-def message_add_layer(layer):
+def message_add_layer(layer,title):
     """ Create the XML message for adding a new layer 
     @param layer(string): the name of the layer to add (same as database table)
     @returns : the XML string
@@ -25,8 +25,8 @@ def message_add_layer(layer):
     'no all feature attributes are defined' error because geoserver tries to 
     generate the table and needs more info.
     """
-    template =  """<featureType><name>%(name)s</name></featureType>"""
-    var = { "name": layer,}
+    template =  """<featureType><name>%(name)s</name><title>%(title)s</title></featureType>"""
+    var = { "name": layer, "title": title }
     return template % var
 
 def message_authority(company,identifier, url):
@@ -74,9 +74,11 @@ def rest_request(endpoint, username, password, method, data, path):
     return res.read()
     
 
-def publish(table, company, identifier,url=DEFAULT_AUTHORITY_URL):
+def publish(table, title, company, identifier,url=DEFAULT_AUTHORITY_URL):
     """ Create a layer & authority metadata for a postgis table
-    
+
+    @oaram table(string): Postgis table name e.g. sid-*
+    @oaram title(string): Human readble title for direct users of WFS
     @param company(string): the company name to add
     @param identifier(string): the identifier. 
         NOTE: This is the same as the PostGIS table!.
@@ -89,10 +91,10 @@ def publish(table, company, identifier,url=DEFAULT_AUTHORITY_URL):
         username = config.get("geoserver","username")
         password = config.get("geoserver","password")
 
-        data = message_add_layer(table)
+        data = message_add_layer(table, title)
         msg = rest_request(endpoint, username, password, "POST", data, ADD_LAYER_PATH)
         log.debug("Geoserver add layer reponse: %s" % msg)
-        data = message_authority("cobweb",identifier,url)
+        data = message_authority(company, identifier, url)
         # this call returns nothing
         rest_request(endpoint, username, password, "PUT", data, PUBLISH_LAYER_PATH_TPL.format(table))
         return msg
@@ -101,7 +103,8 @@ def publish(table, company, identifier,url=DEFAULT_AUTHORITY_URL):
 
 if __name__ == "__main__":
     table = "eo"
-    create_msg = message_add_layer(table)
+    title = "Test Title"
+    create_msg = message_add_layer(table, title)
     endpoint = config.get("geoserver","endpoint")
     username = config.get("geoserver","username")
     password = config.get("geoserver","password")

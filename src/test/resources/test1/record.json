@@ -9,6 +9,7 @@
   },
   "properties": {
     "editor": "audio.edtr",
+    "title": "Test 1 title",
     "fields": [
       {
         "id": "fieldcontain-textarea-1",

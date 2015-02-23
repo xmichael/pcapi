@@ -1,9 +1,10 @@
-""" This module is responsible for the mapping between json properties and postgis DDL / DML """
+""" This module is responsible for the mapping between json properties and postgis 
+SQL Data Definition and Data Manipulation Language (DDL & DML) i.e schema and data"""
 
 import json, re
 
 def mapping(js_rec,userid):
-    """ Takes records as json and returns and array of [<tablename>, <DDL>, <DML>] 
+    """ Takes records as json and returns and array of [<tablename>, <title>, <DDL>, <DML>] 
     values for SQL substitution.
 
     Furthermore, it adds userid and "compulsory QA values" e.g. pos_acc    
@@ -15,7 +16,12 @@ def mapping(js_rec,userid):
     # check if table exists -- defined by editor field without ".edtr" extension
     tname =  rec["properties"]["editor"][:-5]
     tname = whitelist_table(tname)
-    ## DDL for creatign table
+    # title is purely for making people using geoserver directly
+    if ( rec["properties"].has_key("title") ):
+        title = rec["properties"]["title"]
+    else:
+        title = tname # fallback to tablename
+    ## DDL for table creation
     ddl = ["userid TEXT",]
     ddl.append("QA_name TEXT") # Use QA_name instead of name to avoid breaking QA WPS
     ddl.append("timestamp TEXT")    
@@ -40,7 +46,7 @@ def mapping(js_rec,userid):
     # Assume caller will use "AddGeometryColumn" on ddl when creating the table
     lon, lat = rec["geometry"]["coordinates"]
     dml.append( 'POINT({0} {1})'.format(lon,lat))
-    res = [ tname, ddl, dml ]
+    res = [ tname, title, ddl, dml ]
     return res
 
 def whitelist_table(tablename):
@@ -55,9 +61,9 @@ def whitelist_column(column_name):
     """ Checks if column is dodgy. Psycopg cannot escape columnnames(well done!)
     and we must somehow blacklist suspicious input 
     
-    Furthemore, it escape space with underscores because the GML breaks when 
-    variables have spaces (well done again) e.g. "Goodbye Cruel World" would 
-    become "Goodbye_Cruel_World"
+    Furthemore, we need to escape spaces with underscores because the GML breaks when 
+    ,amongs other things, variables have spaces in them (well done again) 
+    e.g. "Goodbye Cruel World" would become "Goodbye_Cruel_World"
     
     Moreover (will this ever end?) COBwEB's QA will crash when certain exotic
     names like "description" are used so quote them e.g. description -> QA_description
@@ -86,7 +92,8 @@ if __name__ == "__main__":
                  ]
             },
         "properties": {
-            "editor": "audio.edtr",
+            "editor": "audio.edtr",-- becomes table/layer name (postgres)
+            "title":  "Thy Survey", -- becomes layer title (geoserver)
             "fields": [
                 {
                     "id": "fieldcontain-textarea-1",

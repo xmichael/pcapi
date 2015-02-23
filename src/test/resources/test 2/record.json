@@ -9,6 +9,7 @@
   },
   "properties": {
     "editor": "eo.edtr",
+    "title": "Test 2 title",
     "fields": [
       {
         "id": "fieldcontain-textarea-1",

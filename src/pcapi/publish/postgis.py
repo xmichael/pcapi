@@ -103,8 +103,9 @@ def put_record(provider, userid, path):
         fields = mapping.mapping(record_data,userid)
         
     sid = fields[0] # table is whitelisted as psycopg does not allow table escaping
-    ddl= fields[1] # columns are also whitelisted as psycopg... column escaping
-    dml=tuple(fields[2]) # tuples are necessary to make scheme-like expansions
+    title = fields[1] # human readable survey title to keep geoserver/portal happy
+    ddl= fields[2] # columns are also whitelisted as psycopg... column escaping
+    dml=tuple(fields[3]) # tuples are necessary to make scheme-like expansions
     table = "sid-" + sid # prefix "sid-" because numbers breaks WFS
     
     res = { "msg": "", "status":"", "error": 0 }
@@ -137,7 +138,7 @@ def put_record(provider, userid, path):
         res = "{0} {1} {2}".format(res["status"], res2["status"], res3["status"] )
         log.debug(res) # join status messages of CREATE and INSERT
         # Publish to geoserver if this is enabled in the configuration file
-        geoserver.publish(table, "cobweb", sid)
+        geoserver.publish(table, title, "cobweb", sid)
     return { "error":0, "message": res } 
 
 def delete_record(provider, userid, path):
