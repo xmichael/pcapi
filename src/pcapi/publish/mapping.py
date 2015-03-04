@@ -82,6 +82,8 @@ def whitelist_column(column_name):
 
 
 if __name__ == "__main__":
+    import sys
+    # use this default record unless we have argv[1]
     rec = """{
         "type": "Feature",
         "geometry": {
@@ -92,8 +94,8 @@ if __name__ == "__main__":
                  ]
             },
         "properties": {
-            "editor": "audio.edtr",-- becomes table/layer name (postgres)
-            "title":  "Thy Survey", -- becomes layer title (geoserver)
+            "editor": "audio.edtr",
+            "title":  "Thy Survey",
             "fields": [
                 {
                     "id": "fieldcontain-textarea-1",
@@ -121,5 +123,8 @@ if __name__ == "__main__":
         "name": "Audio (27-10-2014 15h14m39s)",
         "id": "_9vqvi15sp"
         }"""
+    if len(sys.argv) == 2:
+        with open (sys.argv[1]) as f:
+            rec = f.read()
     print rec
     print `mapping (rec, "userid")`

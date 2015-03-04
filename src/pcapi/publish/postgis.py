@@ -125,6 +125,7 @@ def put_record(provider, userid, path):
         log.info('Table "{0}" does not exist. Creating...'.format(table))
         try:
             create_query = 'CREATE TABLE IF NOT EXISTS "{0}" ({1});'.format(table, ", ".join(ddl))
+            log.debug(create_query)
             res = execute(create_query)
             geo_query = "SELECT AddGeometryColumn( '{0}', 'geom', 4326, 'POINT', 2 )".format(table)
             res2 = execute(geo_query)
