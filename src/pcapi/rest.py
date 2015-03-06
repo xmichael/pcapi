@@ -672,10 +672,15 @@ class PCAPIRest(object):
         self.response.headers['Content-Type'] = 'application/json'
         features = []
         for r in records:
-            log.debug(r.content)
-            features.append(r)
+            #log.debug(r.content)        
+            # get first -and only- value of dictionary because records are an array of
+            # [ { <name> : <geojson feature> } ....]
+            f = r.content.values()[0]
+            features.append(f)
 
-        return json.dumps({"type": "FeatureCollection", "features": features})
+        geojson_str = {"type": "FeatureCollection", "features": features}
+        log.debug(geojson_str)
+        return json.dumps(geojson_str)
 
     def convertToDatabase(self, records, userid):
         """
@@ -799,7 +804,7 @@ class PCAPIRest(object):
 
     def filter_data(self, filters, path, userid):
         records_cache = self.rec_cache
-        log.debug(records_cache)
+        log.debug("Found %d records" % len(records_cache))
         if len(filters) > 0:
             if "editor" in filters:
                 log.debug("filter by editor")
@@ -875,7 +880,7 @@ class PCAPIRest(object):
                     records_cache = self.get_media(records_cache, ["gpx"], frmt)
             if "format" in filters:
                 frmt = self.request.GET.get("frmt")
-                log.debug("filte by format %s" % frmt)
+                log.debug("filter by format %s" % frmt)
                 if frmt == "geojson":
                     return self.convertToGeoJSON(records_cache, userid)
                 elif frmt == "kml":

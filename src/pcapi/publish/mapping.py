@@ -42,6 +42,10 @@ def mapping(js_rec,userid):
     ## Add mandatory QA values
     ddl.append("pos_acc REAL")
     dml.append(rec["properties"]["pos_acc"])
+    ## Add mandatory "id". Check if exists for backwards compatibility
+    if rec["properties"].has_key("id"):
+        ddl.append("record_id TEXT")
+        dml.append(rec["properties"]["id"])
     ## Geometry(!)
     # Assume caller will use "AddGeometryColumn" on ddl when creating the table
     lon, lat = rec["geometry"]["coordinates"]
@@ -118,10 +122,10 @@ if __name__ == "__main__":
             "temp": "",
             "press": "",
             "dtree": [],
-            "timestamp": "2014-10-27T15:14:51.335Z"
+            "timestamp": "2014-10-27T15:14:51.335Z",
+            "id": "_9vqvi15sp"
             },
-        "name": "Audio (27-10-2014 15h14m39s)",
-        "id": "_9vqvi15sp"
+        "name": "Audio (27-10-2014 15h14m39s)"
         }"""
     if len(sys.argv) == 2:
         with open (sys.argv[1]) as f:
