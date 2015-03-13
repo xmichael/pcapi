@@ -32,6 +32,9 @@ def mapping(js_rec,userid):
     for p in rec["properties"]["fields"]:
         # assuming all are TEXT for now
         ddl.append('"%s" TEXT' % whitelist_column(p["label"]))
+        # If "val" is missing (this is a common FTOpen regression), add an empty field 
+        if not p.has_key("val"):
+            p["val"] = ""
         # convert images to relative URLs
         if p["id"].startswith("fieldcontain-image-"):
             value = "{0}/records/{1}/{2}".format(userid, rec["name"], p["val"])
@@ -131,4 +134,15 @@ if __name__ == "__main__":
         with open (sys.argv[1]) as f:
             rec = f.read()
     print rec
-    print `mapping (rec, "userid")`
+    fields = mapping (rec, "userid")
+    print "FIELDS"
+    print `fields`
+    print "PostGIS translation"
+    sid = fields[0]
+    ddl= fields[2]
+    table = "sid-" + sid
+    create_query = u'CREATE TABLE IF NOT EXISTS "{0}" ({1});'.format(table,\
+    u", ".join(ddl))
+    print create_query
+    geo_query = "SELECT AddGeometryColumn( '{0}', 'geom', 4326, 'POINT', 2 )".format(table)
+    print geo_query
