@@ -72,8 +72,10 @@ def whitelist_column(column_name):
     ,amongs other things, variables have spaces in them (well done again) 
     e.g. "Goodbye Cruel World" would become "Goodbye_Cruel_World"
     
-    Moreover (will this ever end?) COBwEB's QA will crash when certain exotic
+    Moreover, (will this ever end?) COBwEB's QA will crash when certain exotic
     names like "description" are used so quote them e.g. description -> QA_description
+    
+    Furthermore, escape "%" to "%%" for psycopg2
     """
     if ( ';' in column_name ):
         raise Exception("Illegal column name: %s" % column_name)
@@ -85,7 +87,7 @@ def whitelist_column(column_name):
         return "QA_metaDataProperty"
     if column_name == "boundedBy":
         return "QA_boundedBy"
-    return column_name.replace(" ","_")
+    return column_name.replace(" ","_").replace("%","%%")
 
 
 if __name__ == "__main__":

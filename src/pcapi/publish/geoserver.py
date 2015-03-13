@@ -25,9 +25,9 @@ def message_add_layer(layer,title):
     'no all feature attributes are defined' error because geoserver tries to 
     generate the table and needs more info.
     """
-    template =  """<featureType><name>%(name)s</name><title>%(title)s</title></featureType>"""
+    template =  u"""<featureType><name>%(name)s</name><title>%(title)s</title></featureType>"""
     var = { "name": layer, "title": title }
-    return template % var
+    return (template % var).encode("utf-8")
 
 def message_authority(company,identifier, url):
     """ Create the XML message for adding an Authority URL and Identifier to the layer
@@ -39,7 +39,7 @@ def message_authority(company,identifier, url):
 
     NOTE: Geoserver does not return anything when this call is made    
     """
-    template = """<layer>
+    template = u"""<layer>
 <enabled>true</enabled>
 <metadata>
 <entry key="authorityURLs">[{"name":"%(name)s","href":"%(url)s"}]</entry>
@@ -48,7 +48,7 @@ key="identifiers">[{"authority":"%(name)s","identifier":"%(id)s"}]</entry></meta
 </layer>
 """
     var = { "name": company, "url": url, "id": identifier } 
-    return template % var
+    return (template % var).encode("utf-8")
 
 def rest_request(endpoint, username, password, method, data, path):
     """ Issue a REST Request with POST or PUT
