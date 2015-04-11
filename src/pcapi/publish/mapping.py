@@ -3,6 +3,10 @@ SQL Data Definition and Data Manipulation Language (DDL & DML) i.e schema and da
 
 import json, re
 
+from pcapi import logtool
+log = logtool.getLogger("mapping", "pcapi.publish")
+
+
 def mapping(js_rec,userid):
     """ Takes records as json and returns and array of [<tablename>, <title>, <DDL>, <DML>] 
     values for SQL substitution.
@@ -13,8 +17,13 @@ def mapping(js_rec,userid):
     # parse record json
     rec = json.loads(js_rec)
 
-    # check if table exists -- defined by editor field without ".edtr" extension
-    tname =  rec["properties"]["editor"][:-5]
+    # check if table exists -- defined by editor field without the ".edtr" extension
+    # However there is an unresolved FTOpen bug where sometimes the ".edtr" is missing.
+    if( len(rec["properties"]["editor"]) == 41 ):
+        tname = rec["properties"]["editor"][:-5]
+    else:
+        tname = rec["properties"]["editor"]
+        log.debug('Workaround -- record {0} sent without ".edtr" suffix'.format(rec["name"]))
     tname = whitelist_table(tname)
     # title is purely for making people using geoserver directly
     if ( rec["properties"].has_key("title") ):
