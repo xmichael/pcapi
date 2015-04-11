@@ -1,0 +1,58 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -2.4240303860562133,
+          53.826496274123464
+        ],
+        [
+          -2.421444736588102,
+          53.82737648333588
+        ],
+        [
+          -2.421659313307505,
+          53.8262493056264
+        ],
+        [
+          -2.424556099018543,
+          53.82589468164832
+        ],
+        [
+          -2.4240303860562133,
+          53.826496274123464
+        ]
+      ]
+    ]
+  },
+  "properties": {
+    "editor": "a36f9e51-0863-42c8-8409-8ee935ccd8be",
+    "fields": [
+      {
+        "id": "fieldcontain-image-1",
+        "val": "IMG_5cdca5f6-e4ae-4cf6-a7df-a772ed8e44d1842515794.jpeg",
+        "label": "Take"
+      }
+    ],
+    "id": "_s4nf95yj3",
+    "title": "CM Test 6 Biological Monitoring",
+    "pos_sat": "",
+    "pos_acc": -1,
+    "pos_tech": "",
+    "dev_os": "",
+    "cam_hoz": 65.0999984741211,
+    "cam_vert": 51.20000076293945,
+    "comp_bar": "",
+    "temp": "",
+    "press": "",
+    "Azimuth": 178.58593728471024,
+    "Pitch": -53.81890928212777,
+    "Roll": 1.7241014298954773,
+    "Make and Model": "MOTOROLA XT1068",
+    "OS Version": "5.0.2",
+    "timestamp": "2015-04-10T09:42:30.960Z"
+  },
+  "name": "polytest"
+}

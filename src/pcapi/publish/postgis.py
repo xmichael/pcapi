@@ -110,10 +110,9 @@ def put_record(provider, userid, path):
     
     res = { "msg": "", "status":"", "error": 0 }
     res2 = res
-    res3 = res    
     
     # This is necessary because of psycopg2 escape limitations for functions like ST_Xxx
-    query = 'INSERT INTO "{0}" VALUES ({1} ST_GeomFromText(%s,4326) ) RETURNING true;'.format(table, \
+    query = 'INSERT INTO "{0}" VALUES ({1} ST_GeomFromGeoJSON(%s) ) RETURNING true;'.format(table, \
         "%s, "* (len(dml)-1) )
     try:
         res = execute(query,dml)
@@ -128,16 +127,16 @@ def put_record(provider, userid, path):
             u", ".join(ddl))
             log.debug(create_query)
             res = execute(create_query)
-            geo_query = "SELECT AddGeometryColumn( '{0}', 'geom', 4326, 'POINT', 2 )".format(table)
-            res2 = execute(geo_query)
         ### Sometimes many threads try to create the table for the "first time"so ignore them,
         except (psycopg2.IntegrityError, psycopg2.ProgrammingError):
             log.debug("Caught race condition: more than 1 thread trying to create database")
             log.debug("Ignoring extra CREATE calls")
             con.rollback() # rollback not necessary as we use "autocommit" but good to have.
         ### INSERT again, now with a table
-        res3 = execute(query,dml)
-        res = "{0} {1} {2}".format(res["status"], res2["status"], res3["status"] )
+        log.debug('Query:\n    {0}'.format(query))
+        log.debug('Data:\n    {0}'.format(dml))
+        res2 = execute(query,dml)
+        res = "{0} {1}".format(res["status"], res2["status"])
         log.debug(res) # join status messages of CREATE and INSERT
         # Publish to geoserver if this is enabled in the configuration file
         geoserver.publish(table, title, "cobweb", sid)

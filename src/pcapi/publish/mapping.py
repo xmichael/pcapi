@@ -50,9 +50,14 @@ def mapping(js_rec,userid):
         ddl.append("record_id TEXT")
         dml.append(rec["properties"]["id"])
     ## Geometry(!)
-    # Assume caller will use "AddGeometryColumn" on ddl when creating the table
-    lon, lat = rec["geometry"]["coordinates"]
-    dml.append( 'POINT({0} {1})'.format(lon,lat))
+    # Using new PostGIS 2.0 functions that don't rely on AddGeometryColumn and 
+    # can parse GeoJSON with custom crs
+    if not rec["geometry"].has_key("crs"):
+        #Assumme 4326 if source geometry has no crs field
+        rec["geometry"]["crs"] = {"type":"name", "properties":{"name":"EPSG:4326"} }
+    # target geometry is always 4326
+    ddl.append('geom geometry({0},4326)'.format(rec["geometry"]["type"]))
+    dml.append( json.dumps(rec["geometry"]))
     res = [ tname, title, ddl, dml ]
     return res
 
@@ -146,5 +151,3 @@ if __name__ == "__main__":
     create_query = u'CREATE TABLE IF NOT EXISTS "{0}" ({1});'.format(table,\
     u", ".join(ddl))
     print create_query
-    geo_query = "SELECT AddGeometryColumn( '{0}', 'geom', 4326, 'POINT', 2 )".format(table)
-    print geo_query
