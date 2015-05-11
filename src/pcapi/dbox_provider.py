@@ -239,7 +239,7 @@ class DropboxProvider(object):
         If folder already exists we have to implement to "new file name" algorithm for
         folders since dropbox does not support creating new folders with different names.
         """
-        log.debug("move")
+        log.debug("move from {0} to {1}".format(path1, path2))
         try:
             metadata = self.api_client.file_move(path1, path2)
             return Metadata(metadata)
@@ -258,6 +258,21 @@ class DropboxProvider(object):
                 return self.move(path1, newpath)
             else:
                 raise e
+
+    def copy(self, path1, path2):
+        """
+        copy folder1 to folder2
+        """
+        log.debug("copy from {0} to {1}".format(path1, path2))
+        try:
+            res = Metadata(self.api_client.file_copy(path1, path2))
+            log.debug(res)
+            return {"error": 0, "msg": "Dir {0} was backed up to {1}".format(path1, path2)}
+        except rest.ErrorResponse as e:
+            if e.status == 403:
+                log.debug("copy(): folder collisions")
+            pass
+            return {"error":1 , "msg": str(e)}
 
     def search(self, path, word):
         """
