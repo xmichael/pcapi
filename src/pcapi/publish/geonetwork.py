@@ -1,10 +1,14 @@
 """ Module to Communicate with Geonetworks's REST API. This is very COBWEB specific and is
 not recomended for people who can avoid custom APIs"""
 
-import urllib2, json, base64
+import urllib2, json, base64, threading
 from pcapi import config, logtool
 
 log = logtool.getLogger("geoserver", "pcapi.publish")
+
+# make sure this is global for all threads (obviously)
+lock = threading.Lock()
+
 
 class Surveys:
     # raw surveys resposne from geonetwork
@@ -62,16 +66,17 @@ class Surveys:
             "names": ["Another Woodlands Survey", "Grassland survey"]
         }
         """
-        metadata = []
-        names = []
+        # use a dict/set instead of list to prune crazy GN duplicate values(!)
+        summary_set = {}
+
         log.debug("symmary is:")
         log.debug(logtool.pp(self._summary))
         if (self.count == 0):
             return { "msg" : "No surveys found", "error" : 1}
+        log.debug("Survey Count (from GN) was stated to be: " + str(self.count))
         for s in self._summary:
-            metadata.append(s["sid"])
-            names.append(s["title"])
-        return { "metadata": metadata , "names": names , "error": 0}
+            summary_set[ s["sid"] ] = s["title"]
+        return { "metadata": summary_set.keys() , "names": summary_set.values() , "error": 0}
 
 def msg_get_surveys(uid):
     """ Create the get request for fetching all surveys a users is registered for. 
@@ -129,9 +134,11 @@ def get_surveys(uid):
     username = config.get("geonetwork","username")
     password = config.get("geonetwork","password")
 
-    msg = msg_get_surveys(uid)
-    resj = get_request(endpoint, username, password, msg)
-    res = json.loads(resj)
+    # just in case, since urllib2 is not threadsafe according to docs
+    with lock:
+        msg = msg_get_surveys(uid)
+        resj = get_request(endpoint, username, password, msg)
+        res = json.loads(resj)
 
     return Surveys(res)
     
