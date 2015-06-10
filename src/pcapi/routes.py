@@ -119,5 +119,5 @@ def enable_cors():
 ### Error pages ###
 @bottle.error(404)
 def error404(error):
-    return ['NO PC-API endpoint at this URL\n',]
+    return ['NO PC-API endpoint at this URL:\n', request.environ["REQUEST_URI"], "\n"]
 
