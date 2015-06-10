@@ -3,7 +3,7 @@ Personal Cloud API
 
 PCAPI is a **storage middleware** that abstracts access to Cloud Storage providers in addition to its own local storage. Authentication to external providers like e.g. Dropbox is based on oAuth.
 
-PCAPI is compatible with the [Fieldtrip-Open](https://github.com/cobweb-eu/fieldtrip-open) framework for building mobile apps.
+PCAPI is compatible with the [Fieldtrip-Open](https://github.com/edina/fieldtrip-open) framework for building mobile apps.
 
 Installation
 ------------
