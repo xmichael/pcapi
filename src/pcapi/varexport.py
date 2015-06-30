@@ -29,6 +29,9 @@ PSAT='pos_sat' # Number of satellites connected to
 PACC='pos_acc'
 PTECH='pos_tech' # Type of technology used (eg. GPS)
 DOS='dev_os'
+MMOD='make_model'
+IWTH='image_width'
+IHHT='image_height'
 CHOZ='cam_hoz'
 CVERT='cam_vert'
 TSTMP='timestamp'
@@ -41,8 +44,8 @@ TEMP='temp'
 PRESS='press'
 GEO='geom'
 OBS_INSERT="INSERT INTO "+OBST+"("+RID+","+PSAT+","+PACC+","+PTECH+","+DOS+\
-","+CHOZ+","+CVERT+","+TSTMP+","+AZI+","+PTH+","+RLL+","+TEMP+","+PRESS+","+GEO+\
-") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+","+MMOD+","+IWTH+","+IHHT+","+CHOZ+","+CVERT+","+TSTMP+","+AZI+","+PTH+","+RLL+","+TEMP+","+PRESS+","+GEO+\
+") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
 
 #Observation group table
 OID='oid'
@@ -109,7 +112,9 @@ POINT='Point'
 DEC='Decision'
 RIDENT='Record ID'
 OSV='OS Version'
-
+MKM='Make and Model'
+IWIDTH='Image Width'
+IHEIGHT='Image Height'
 
         
 log = logtool.getLogger("Export Variable GeoJSON", "pcapi")
@@ -176,6 +181,9 @@ def export(path):
         userid=path[0:path.index('/')]
 	
         osver=fcProp[OSV]
+	mkMod=fcProp[MKM]
+	iWth=fcProp[IWIDTH]
+	iHht=fcProp[IHEIGHT]
   
         dec=fcProp[DEC]
        
@@ -204,7 +212,7 @@ def export(path):
 
 	
         for image in img:
-            image.insert(cursor,oid,userid,osver,ipA)
+            image.insert(cursor,oid,userid,osver,mkMod,iWth,iHht,ipA)
       
         #OID+","+OPT
         
@@ -262,7 +270,7 @@ class Img:
 	self.temp=tmp
    	self.press=prss
    		
-    def insert(self,cursor,oid,userid,osver,ipA):
+    def insert(self,cursor,oid,userid,osver,mkMod,iWth,iHht,ipA):
         
         
         
@@ -275,7 +283,7 @@ class Img:
         ipoint.srid=SRID	
         print self.rid
         cursor.execute(OBS_INSERT,\
-        (self.rid,nSat,self.acc,self.ls,osver,self.vah,self.vav,self.ts,self.azi,self.pth,self.rll,self.temp,self.press,ipoint))
+        (self.rid,nSat,self.acc,self.ls,osver,mkMod,iWth,iHht,self.vah,self.vav,self.ts,self.azi,self.pth,self.rll,self.temp,self.press,ipoint))
         
         
         mk=str(self.mkX)+' '+str(self.mkY)
