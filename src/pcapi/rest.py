@@ -519,14 +519,6 @@ class PCAPIRest(object):
             if method=="PUT":
                 fp = self.request.body
                 md = self.provider.upload(path, fp, overwrite=True)
-                try:
-                    public = self.request.GET.get("public")
-                    if public == "true":
-                        log.debug("Mirroring command to public uid: ")
-                        self.provider.copy_to_public_folder(path)
-                except Exception as e:
-                    if res.has_key("msg"):
-                        res["msg"] + "  PUBLIC_COPY: " + e.message
                 return { "error": 0, "msg" : "File uploaded", "path":md.ls()}
             ######## POST -> Upload/Rename file using dropbox rules ########
             if method=="POST":
