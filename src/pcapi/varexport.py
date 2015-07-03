@@ -32,6 +32,7 @@ DOS='dev_os'
 MMOD='make_model'
 IWTH='image_width'
 IHHT='image_height'
+FLEN="focal_length"
 CHOZ='cam_hoz'
 CVERT='cam_vert'
 TSTMP='timestamp'
@@ -44,8 +45,8 @@ TEMP='temp'
 PRESS='press'
 GEO='geom'
 OBS_INSERT="INSERT INTO "+OBST+"("+RID+","+PSAT+","+PACC+","+PTECH+","+DOS+\
-","+MMOD+","+IWTH+","+IHHT+","+CHOZ+","+CVERT+","+TSTMP+","+AZI+","+PTH+","+RLL+","+TEMP+","+PRESS+","+GEO+\
-") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+","+MMOD+","+IWTH+","+IHHT+","+FLEN+","+CHOZ+","+CVERT+","+TSTMP+","+AZI+","+PTH+","+RLL+","+TEMP+","+PRESS+","+GEO+\
+") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
 
 #Observation group table
 OID='oid'
@@ -115,7 +116,7 @@ OSV='OS Version'
 MKM='Make and Model'
 IWIDTH='Image Width'
 IHEIGHT='Image Height'
-
+FLENGTH='Focal Length'
         
 log = logtool.getLogger("Export Variable GeoJSON", "pcapi")
 
@@ -184,6 +185,8 @@ def export(path):
 	mkMod=fcProp[MKM]
 	iWth=fcProp[IWIDTH]
 	iHht=fcProp[IHEIGHT]
+
+	fLen=fcProp[FLENGTH]
   
         dec=fcProp[DEC]
        
@@ -212,7 +215,7 @@ def export(path):
 
 	
         for image in img:
-            image.insert(cursor,oid,userid,osver,mkMod,iWth,iHht,ipA)
+            image.insert(cursor,oid,userid,osver,mkMod,iWth,iHht,ipA,fLen)
       
         #OID+","+OPT
         
@@ -270,7 +273,7 @@ class Img:
 	self.temp=tmp
    	self.press=prss
    		
-    def insert(self,cursor,oid,userid,osver,mkMod,iWth,iHht,ipA):
+    def insert(self,cursor,oid,userid,osver,mkMod,iWth,iHht,ipA,fLen):
         
         
         
@@ -283,7 +286,7 @@ class Img:
         ipoint.srid=SRID	
         print self.rid
         cursor.execute(OBS_INSERT,\
-        (self.rid,nSat,self.acc,self.ls,osver,mkMod,iWth,iHht,self.vah,self.vav,self.ts,self.azi,self.pth,self.rll,self.temp,self.press,ipoint))
+        (self.rid,nSat,self.acc,self.ls,osver,mkMod,iWth,iHht,fLen,self.vah,self.vav,self.ts,self.azi,self.pth,self.rll,self.temp,self.press,ipoint))
         
         
         mk=str(self.mkX)+' '+str(self.mkY)
