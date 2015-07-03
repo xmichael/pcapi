@@ -469,6 +469,29 @@ class TestDropboxSync(unittest.TestCase):
         diff_resp = app.get('/sync/dropbox/%s/%s' % ( userid, cur_resp["cursor"] ) ).json
         self.assertEquals( diff_resp["updated"] , [u'/records/myrecord', u'/records', u'/records/myrecord/record.json'] )
 
+class TestDropboxBackup(unittest.TestCase):
+    """
+    Test: Backup related testing.
+    """
+
+    def test_backup(self):
+        """Get Cursor before adding a file, then sync to see the changes made"""
+        #cleanup EVERYTHING under /records/
+        app.delete('/records/dropbox/%s//' % userid)
+        app.delete('/fs/dropbox/%s/records_backup/' % userid)
+        #create new record
+        put_resp = app.post('/records/dropbox/%s/myrecord' % userid, params=localfile.read() ).json
+        self.assertEquals(put_resp["error"], 0)
+        # create backup
+        backup_resp = app.get('/backup/dropbox/%s/records' % userid).json
+        self.assertEquals(backup_resp["error"], 0)
+        # check if backup was created
+        check_backup_resp = app.get('/fs/dropbox/%s/records_backup' % ( userid ) ).json
+        self.assertEquals(check_backup_resp["error"], 0)
+        #re attempt to back it up
+        backup_resp2 = app.get('/backup/dropbox/%s/records' % userid).json
+        self.assertEquals( backup_resp2["error"] , 1)
+
 class TestEditor(unittest.TestCase):
     def setUp(self):
         self.f = open ( editorfilepath , "r")

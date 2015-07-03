@@ -404,23 +404,23 @@ class PCAPIRest(object):
             return res
         return { "error": 1, "msg": "Path %s has subdirectories, which are not allowed" % path}
 
-    def layers(self, provider, userid, path):
-        """ High level layer (overlay) functions. Normally it is a shortcut to 
+    def features(self, provider, userid, path):
+        """ High level layer (overlay) functions. Normally it is a shortcut to
         /fs/ for the /layers folder.
 
         When called with public=true, then ALL requests will also apply to 
         the public folder (as defined in pcapi.ini).
 
-        """        
-        log.debug('layers(%s, %s, %s)' % (provider, userid, path) )
+        """
+        log.debug('features(%s, %s, %s)' % (provider, userid, path) )
 
         error = self.auth(provider, userid)
         if (error):
             return error
 
-        path = "/layers/" + path
-        # No subdirectories are allowed when accessing layers
-        if re.findall("/layers//?[^/]*$",path):
+        path = "/features/" + path
+        # No subdirectories are allowed when accessing features
+        if re.findall("/features//?[^/]*$",path):
             res = self.fs(provider,userid,path)
             ## If public==true then execute the same command to the 
             ## public UUID (s. pcapi.ini) and return that result
@@ -643,6 +643,19 @@ class PCAPIRest(object):
         else:
             res = { "error": 1 , "msg": "Wrong or unsupported arguments" }
         return res
+
+    def backup(self, provider, userid, folder):
+        """
+        copy folders
+        """
+        new_folder = "{0}_backup".format(folder)
+        log.debug("copy folder from {0} to {1}".format(folder, new_folder))
+
+        error = self.auth(provider,userid)
+        if (error):
+            return error
+
+        return self.provider.copy(folder, new_folder)
 
     def convertToKML(self, records, userid):
         """

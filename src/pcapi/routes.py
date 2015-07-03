@@ -32,11 +32,15 @@ def exportvargeoj(path):
     return varexport.export(path)
 
 ###  /sync/... API ###
-
 @route('/sync/<provider>/<userid>')
 @route('/sync/<provider>/<userid>/<cursor>')
 def sync(userid, provider, cursor=None):
     return PCAPIRest(request,response).sync(provider, userid, cursor)
+
+###  /sync/... API ###
+@route('/backup/<provider>/<userid>/<folder>', method=["GET"])
+def backup(provider, userid, folder):
+    return PCAPIRest(request,response).backup(provider, userid, folder)
 
 ###  /assets/... API ###
 @route('/records/<provider>/<userid>/assets/',method=["GET","PUT","POST","DELETE"] )
@@ -70,10 +74,10 @@ def surveys(provider, userid, survey=None):
 
 ###  /layers/... API ###
 
-@route('/layers/<provider>/<userid>/',method=["GET","POST","PUT","DELETE"] )
-@route('/layers/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE"] )
+@route('/features/<provider>/<userid>/',method=["GET","POST","PUT","DELETE"] )
+@route('/features/<provider>/<userid>/<path:path>',method=["GET","POST","PUT","DELETE"] )
 def layers(provider, userid, path="/"):
-    return PCAPIRest(request,response).layers(provider, userid, path)
+    return PCAPIRest(request,response).features(provider, userid, path)
 
 ###  /fs/... API ###
 
