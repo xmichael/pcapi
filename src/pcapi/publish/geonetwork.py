@@ -22,6 +22,7 @@ class Surveys:
         """ API to access the contents of the geonetwork response """
         #store raw surveys
         self._surveys = surveys
+        self._summary = []
 
         # create a summary of surveys as an array of [ sid, coordinator uid, title ]
         self.count = int(self._surveys["summary"]["@count"])
@@ -49,6 +50,12 @@ class Surveys:
         """ return the parsed geoserver resposne """
         return self._surveys
     
+    def get_raw_survey_names(self):
+        """ return a list of the survey names as returned from geonetwork """
+        if ('metadata' in self._surveys and 
+                'defaultTitle' in self._surveys['metadata']):
+            return [ x['metadata']['defaultTitle'] for x in self._surveys ]
+            
     def get_survey(self, sid):
         """ @returns
                 {"coordinator", "title"} of survey
@@ -67,9 +74,11 @@ class Surveys:
         }
         """
         # use a dict/set instead of list to prune crazy GN duplicate values(!)
+        
         summary_set = {}
-
-        log.debug("symmary is:")
+        log.debug("Surveys from GeoNetwork are:")
+        log.debug(logtool.pp(self.get_raw_survey_names()))
+        log.debug("summary is:")
         log.debug(logtool.pp(self._summary))
         if (self.count == 0):
             return { "msg" : "No surveys found", "error" : 1}
