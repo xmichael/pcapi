@@ -10,7 +10,7 @@ import urllib2
 import time
 import zipfile
 
-from bottle import Response, abort
+from bottle import Response, abort, static_file
 from StringIO import StringIO
 from operator import itemgetter
 from wand.image import Image
@@ -470,16 +470,19 @@ class PCAPIRest(object):
                     return { "error": 0, "metadata" : msg}
                 ## GET url is a file -> Download file stream ########
                 else:
-                    #check here if there is an image part of and if image exists in dropbox
-                    httpres, metadata = self.provider.get_file_and_metadata(path)
-                    log.debug(metadata)
-                    body = httpres.read()
-                    headers = {}
                     if (provider == "local"):
-                        return Response(body=body, status='200 OK', headers=headers)
-                    #DROPBOX-specific error checks for editors and records.
-                    #TODO: Move outside /fs/ e.g. GET for /records/...
+                        rpath = self.provider.realpath(path)
+                        log.debug("Serving static file: %s" % rpath );
+                        return static_file( os.path.basename(rpath) , root=os.path.dirname(rpath))
                     else:
+                        #DROPBOX-specific error checks for editors and records.
+                        #TODO: Move outside /fs/ e.g. GET for /records/...
+
+                        #check here if there is an image part of and if image exists in dropbox
+                        httpres, metadata = self.provider.get_file_and_metadata(path)
+                        log.debug(metadata)
+                        body = httpres.read()
+                        headers = {}
                         for name, value in httpres.getheaders():
                             if name != "connection":
                                 self.response[name] = value
