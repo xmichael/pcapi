@@ -45,12 +45,6 @@ class Surveys:
         """ return the parsed geoserver resposne """
         return self._surveys
     
-    def get_raw_survey_names(self):
-        """ return a list of the survey names as returned from geonetwork """
-        if ('metadata' in self._surveys and 
-                'defaultTitle' in self._surveys['metadata']):
-            return [ x['metadata']['defaultTitle'] for x in self._surveys ]
-            
     def get_survey(self, sid):
         """ @returns
                 {"coordinator", "title"} of survey
@@ -72,7 +66,6 @@ class Surveys:
         
         summary_set = {}
         log.debug("Surveys from GeoNetwork are:")
-        log.debug(logtool.pp(self.get_raw_survey_names()))
         log.debug("summary is:")
         log.debug(logtool.pp(self._summary))
         if (self.count == 0):
